@@ -34,6 +34,11 @@ body {
 ol, ul {
 	list-style: none;
 }
+
+ol a, ul a {
+	text-decoration: none;
+	color: inherit;
+}
 blockquote, q {
 	quotes: none;
 }
@@ -152,6 +157,46 @@ li:hover {
     background-color: #1D6154;
 }
 
+#login {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 35%;
+	margin: auto;
+	margin-top: 10em;
+	margin-bottom: 25em;
+}
+
+#login h2 {
+	margin-bottom: 1em;
+}
+
+#login form {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+#login label {
+	margin: 1em 0;
+}
+
+#login input {
+	height: 50px;
+	font-size: 14px;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+
+#login .forgot-password {
+	text-align: center;
+	color: #3D3D3D;
+	text-decoration: underline;
+}
+
+
+
 .gallery {
 	width: 100%;
 	display: grid;
@@ -162,7 +207,6 @@ li:hover {
 
 .gallery img {
 	width: 100%;
-
 }
 #contact {
 	width: 50%;
@@ -210,6 +254,5 @@ input[type="submit"]{
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
-	margin: 2em
 }
 
