@@ -1,6 +1,6 @@
 import {generateWorks} from "./works.js";
 import { initializeFilterButtons } from './buttons.js';
-import { handleLogin, updateLoginLogoutButton } from './login.js';
+import { handleLogin, updateLoginLogoutButton, displayEditionMode } from './login.js';
 
 let works = window.localStorage.getItem("works");
 
@@ -19,7 +19,7 @@ initializeFilterButtons();
 handleLogin();
 
 document.addEventListener("DOMContentLoaded", updateLoginLogoutButton);
-
+window.addEventListener('DOMContentLoaded', displayEditionMode);
 
 
 
