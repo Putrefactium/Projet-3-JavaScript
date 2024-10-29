@@ -103,6 +103,29 @@ nav li {
 li:hover {
 	color: #B1663C;
 }
+
+.edition-mode a {
+    background-color: black;
+    width: 100%;
+	height: 59px;
+	gap: 11px;
+	text-decoration: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.edition-mode p {
+    color: white;
+	font-size: 16px;
+    margin: 0;
+}
+
+.edition-mode img {
+	width: 15.58px;
+	height: 15.58px;
+}
+
 #introduction {
 	display: flex;
 	align-items: center;
@@ -114,6 +137,113 @@ li:hover {
 	display: block;
 	margin: auto;
 	width: 80%;
+}
+
+.modal-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 630px;
+    position: relative;
+}
+
+.modal-close {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    border: none;
+    background: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.modal-content h2 {
+    text-align: center;
+	margin-top: 20px;
+    margin-bottom: 20px;
+	font-family: 'Work Sans';
+	font-size: 26px;
+	color: black;
+}
+
+.modal-gallery {
+    display: flex;
+    flex-wrap: wrap;
+	width: 75%;
+	margin: auto;
+    gap: 20px;  /* Réduit de 10px à 5px */
+    padding: 20px 40px;  /* Augmente le padding horizontal à 40px */
+	justify-content: flex-start;
+}
+
+.modal-gallery figure {
+	position: relative;
+    margin: 0;
+    flex: 0 0 calc(20% - 20px); 
+}
+
+.modal-gallery img {
+    width: 76px;
+    height: 102px;
+    object-fit: cover;
+}
+
+.delete-button {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 17px;
+    height: 17px;
+    background-color: black;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px;
+}
+
+.delete-button img.trash-icon {
+    width: 9px;
+    height: 10px;
+}
+
+.modal-separator {
+    border: none;
+    border-top: 1px solid #B3B3B3;
+    width: 75%;  
+	margin-top: 30px;
+}
+
+.add-photo-button {
+    font-family: 'Syne';
+    font-weight: 700;
+    color: white;
+    background-color: #1D6154;
+    margin: 2em auto;
+    width: 237px;
+	margin-top: 30px;
+    text-align: center;
+    border-radius: 60px;
+    padding: 10px 20px;
+    border: none;
+    display: block;
+    cursor: pointer;
+
 }
 
 #introduction article {
