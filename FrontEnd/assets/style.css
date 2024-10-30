@@ -243,7 +243,108 @@ li:hover {
     border: none;
     display: block;
     cursor: pointer;
+}
 
+.add-photo-form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.upload-container {
+    background-color: #E8F1F6;
+    width: 60%;
+    margin: 0 auto;
+    text-align: center;
+    border-radius: 3px;
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.hidden-input {
+    display: none;
+}
+
+.error-message {
+    color: #ff0000;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.upload-icon {
+    object-fit: contain;
+	margin-top: 20px;
+	height: 60px;
+	width: 68px;
+}
+
+.add-photo-input-button {
+    background-color: #CBD6DC;
+    color: #306685;
+    padding: 10px 20px;
+    border-radius: 50px;
+    border: none;
+	font-family: 'Work Sans';
+	font-size: 14px;
+    cursor: pointer;
+    margin: 15px 0;
+}
+
+.upload-info {
+    color: #444;
+    font-size: 0.8em;
+	margin-bottom: 20px;
+}
+
+.image-preview {
+    max-width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+}
+
+.form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 60%;
+    margin: 0 auto;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-group input,
+.form-group select {
+    height: 50px;
+    font-size: 14px;
+    border: none;
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+
+.form-group label {
+    color: #3D3D3D;
+}
+
+.hidden {
+    display: none;
+}
+
+.validate-button {
+    width: 40%;
+	display: block;
+    margin: 10px auto;
+    padding: 10px;
+    background-color: #A7A7A7;
+    color: white;
+    border: none;
+    border-radius: 60px;
+    cursor: pointer;
 }
 
 #introduction article {
