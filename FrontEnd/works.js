@@ -1,16 +1,37 @@
-export function generateWorks(works){
-    for (let i = 0; i < works.length; i++) {
-        const work = works[i];
-        const sectionWorks = document.querySelector(".gallery");
-        const sectionFigure = document.createElement("figure");
-        const sectionImage = document.createElement("img");
-        sectionImage.src = work.imageUrl;
-        const sectionFigcaption = document.createElement("figcaption");
-        sectionFigcaption.textContent = work.title;
+/**
+ * Gestion de l'affichage des projets dans la galerie principale
+ * - Génération dynamique des éléments HTML
+ * - Affichage des images et titres des projets
+ */
 
-        sectionFigure.appendChild(sectionImage);
-        sectionFigure.appendChild(sectionFigcaption);
-        sectionWorks.appendChild(sectionFigure);
-    }
+/**
+ * Génère l'affichage des travaux dans la galerie principale
+ * @param {Array} works - Tableau contenant les travaux à afficher
+ */
+export async function generateWorks(works) {
+    // Sélectionner la galerie
+    const gallery = document.querySelector(".gallery");
+    
+    // Vider la galerie existante
+    gallery.innerHTML = '';
+    
+    // Générer les nouveaux éléments
+    works.forEach(work => {
+        // Création du conteneur pour chaque projet
+        const figure = document.createElement("figure");
+        
+        // Configuration de l'image du projet
+        const img = document.createElement("img");
+        img.src = work.imageUrl;
+        img.alt = work.title;
+        
+        // Configuration du titre du projet
+        const figcaption = document.createElement("figcaption");
+        figcaption.innerText = work.title;
+        
+        // Assemblage des éléments dans la galerie
+        figure.appendChild(img);
+        figure.appendChild(figcaption);
+        gallery.appendChild(figure);
+    });
 }
-
