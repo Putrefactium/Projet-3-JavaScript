@@ -3,17 +3,12 @@ import { initializeFilterButtons } from './buttons.js';
 import { handleLogin, updateLoginLogoutButton, displayEditionMode } from './login.js';
 
 // Initialisation : Récupération des travaux depuis le localStorage ou l'API
-let works = window.localStorage.getItem("works");
-
-if (!works){
+let works = JSON.parse(window.localStorage.getItem("works")) ?? await (async () => {
     const answer = await fetch("http://localhost:5678/api/works");
-    works = await answer.json();
-
-    const valueWorks = JSON.stringify(works);
-    window.localStorage.setItem("works", valueWorks);
-} else {
-    works = JSON.parse(works);
-}
+    const works = await answer.json();
+    window.localStorage.setItem("works", JSON.stringify(works));
+    return works;
+})();
 
 // Affichage des travaux dans la galerie principale
 generateWorks(works);
