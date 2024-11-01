@@ -1,0 +1,44 @@
+#introduction {
+    display: flex;
+    align-items: flex-start;
+    margin: auto;
+    width: 90%;
+    gap: 80px;
+    margin: var(--spacing-lg) auto;
+    margin-bottom: 120px;
+}
+
+#introduction figure {
+	flex: 1;
+}
+
+#introduction img {
+	display: block;
+	margin: auto;
+	width: 100%;
+}
+
+#introduction article {
+    flex: 1;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: auto;
+}
+
+#introduction h2 {
+    margin-bottom: var(--spacing-md);
+    font-size: var(--font-size-xl);
+    font-family: var(--font-primary); /* Ajoute la police Syne */
+    color: var(--color-primary); /* Ajoute la couleur primaire (#1D6154) */
+}
+
+#introduction p {
+    margin-bottom: var(--spacing-xs);
+    line-height: 1.4; /* Un line-height plus naturel */
+}
+
+#introduction p:last-of-type {
+    padding-bottom: 0; /* Supprime le padding en bas */
+}

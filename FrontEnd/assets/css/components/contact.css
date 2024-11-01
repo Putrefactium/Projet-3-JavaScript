@@ -1,0 +1,52 @@
+#contact {
+    width: 40%;
+    margin: auto;
+}
+
+#contact > * {
+    text-align: center;
+}
+
+#contact h2 {
+    margin-bottom: var(--spacing-sm);
+    font-family: var(--font-primary);
+    font-size: var(--font-size-xl);
+    color: var(--color-primary);
+}
+
+#contact p {
+    font-size: var(--font-size-md);
+}
+#contact form {
+    text-align: left;
+    margin-top: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+}
+
+#contact input {
+    height: 50px;
+    font-size: var(--font-size-sm);
+    border: none;
+    box-shadow: var(--box-shadow);
+}
+
+#contact label {
+    margin: 2em 0 1em 0;
+}
+
+#contact textarea {
+    border: none;
+    box-shadow: var(--box-shadow);
+}
+
+#contact input[type="submit"] {
+    font-family: var(--font-primary);
+    font-weight: 700;
+    color: var(--color-white);
+    background-color: var(--color-primary);
+    margin: 2em auto;
+    width: 180px;
+    text-align: center;
+    border-radius: var(--border-radius);
+}

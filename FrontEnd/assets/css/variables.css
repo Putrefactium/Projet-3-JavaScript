@@ -1,0 +1,30 @@
+:root {
+    /* Couleurs */
+    --color-primary: #1D6154;
+    --color-secondary: #144940;
+    --color-black: #000000;
+    --color-white: #FFFFFF;
+    --color-grey: #A7A7A7;
+    --color-light-grey: #E8F1F6;
+    --color-dark-grey: #3D3D3D;
+    --color-shadow: rgba(0, 0, 0, 0.09);
+    --box-shadow: 0px 4px 14px var(--color-shadow);  /* Ajout de la définition complète de box-shadow */
+    --color-modal-overlay: rgba(0, 0, 0, 0.5);
+  
+    /* Typographie */
+    --font-primary: 'Syne';
+    --font-secondary: 'Work Sans';
+    --font-size-xs: 10px;
+    --font-size-sm: 14px;
+    --font-size-md: 16px;
+    --font-size-lg: 22px;
+    --font-size-xl: 30px;
+  
+    /* Layout */
+    --max-width: 1140px;
+    --border-radius: 60px;
+    --spacing-xs: 10px;
+    --spacing-sm: 20px;
+    --spacing-md: 30px;
+    --spacing-lg: 50px;
+  }

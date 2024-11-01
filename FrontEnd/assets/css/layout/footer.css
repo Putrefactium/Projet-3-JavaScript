@@ -1,0 +1,13 @@
+footer {
+    margin: var(--spacing-lg) 0;
+}
+
+footer nav ul {
+    display: flex;
+    justify-content: flex-end;
+    padding: var(--spacing-md) 0;
+}
+
+footer nav li {
+    margin-left: var(--spacing-md);
+}

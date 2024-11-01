@@ -1,0 +1,208 @@
+.modal-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-modal-overlay);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: var(--color-white);
+    padding: var(--spacing-sm);
+    border-radius: 10px;
+    width: 90%;
+    max-width: 630px;
+    position: relative;
+}
+
+.modal-close {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    border: none;
+    background: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.modal-content h2 {
+    text-align: center;
+    margin-top: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    font-family: var(--font-secondary);
+    font-size: 26px;
+    color: var(--color-black);
+}
+
+.modal-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    width: 75%;
+    margin: auto;
+    gap: var(--spacing-sm);
+    margin-bottom: 60px;
+    justify-content: flex-start;
+}
+
+.modal-gallery figure {
+    position: relative;
+    margin: 0;
+    flex: 0 0 calc(20% - 20px);
+}
+
+.modal-gallery img {
+    width: 76px;
+    height: 102px;
+    object-fit: cover;
+}
+
+.delete-button {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 17px;
+    height: 17px;
+    background-color: var(--color-black);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px;
+}
+
+.delete-button img.trash-icon {
+    width: 9px;
+    height: 10px;
+}
+
+.modal-separator {
+    border: none;
+    border-top: 1px solid #B3B3B3;
+    width: 75%;
+    margin: var(--spacing-md) auto;  /* Ajout de auto pour centrer */
+}
+
+/* Styles pour l'ajout de photo */
+.add-photo-button {
+    font-family: var(--font-primary);
+    font-weight: 700;
+    color: var(--color-white);
+    background-color: var(--color-primary);
+    margin: 2em auto;
+    width: 237px;
+    margin-top: var(--spacing-md);
+    text-align: center;
+    border-radius: var(--border-radius);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: none;
+    display: block;
+    cursor: pointer;
+}
+
+.add-photo-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.upload-container {
+    background-color: var(--color-light-grey);
+    width: 60%;
+    margin: 0 auto;
+    text-align: center;
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.hidden-input {
+    display: none;
+}
+
+.error-message {
+    color: #ff0000;
+    font-size: var(--font-size-sm);
+    margin-top: var(--spacing-xs);
+    text-align: center;
+}
+
+.upload-icon {
+    object-fit: contain;
+    margin-top: var(--spacing-sm);
+    height: 60px;
+    width: 68px;
+}
+
+.add-photo-input-button {
+    background-color: #CBD6DC;
+    color: #306685;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 50px;
+    border: none;
+    font-family: var(--font-secondary);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    margin: 15px 0;
+}
+
+.upload-info {
+    color: #444;
+    font-size: 0.8em;
+    margin-bottom: var(--spacing-sm);
+}
+
+.image-preview {
+    max-width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+}
+
+.form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    width: 60%;
+    margin: 0 auto;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.form-group input,
+.form-group select {
+    height: 50px;
+    font-size: var(--font-size-sm);
+    border: none;
+    box-shadow: var(--box-shadow);
+}
+
+.form-group label {
+    color: var(--color-dark-grey);
+}
+
+.hidden {
+    display: none;
+}
+
+.validate-button {
+    width: 40%;
+    display: block;
+    margin: var(--spacing-xs) auto;
+    padding: var(--spacing-xs);
+    background-color: var(--color-grey);
+    color: var(--color-white);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+}
