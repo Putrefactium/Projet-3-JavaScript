@@ -9,27 +9,19 @@
  * @param {Array} works - Tableau contenant les travaux à afficher
  */
 export async function generateWorks(works) {
-    // Sélectionner la galerie
     const gallery = document.querySelector(".gallery");
-    
-    // Vider la galerie existante
     gallery.innerHTML = '';
     
-    // Générer les nouveaux éléments
-    works.forEach(work => {
-        // Création du conteneur pour chaque projet
+    works.forEach(({ imageUrl, title }) => {  
         const figure = document.createElement("figure");
         
-        // Configuration de l'image du projet
         const img = document.createElement("img");
-        img.src = work.imageUrl;
-        img.alt = work.title;
+        img.src = imageUrl;        
+        img.alt = title;          
         
-        // Configuration du titre du projet
         const figcaption = document.createElement("figcaption");
-        figcaption.innerText = work.title;
+        figcaption.innerText = title;  
         
-        // Assemblage des éléments dans la galerie
         figure.appendChild(img);
         figure.appendChild(figcaption);
         gallery.appendChild(figure);
