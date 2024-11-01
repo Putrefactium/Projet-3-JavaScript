@@ -235,6 +235,11 @@ async function openAddPhotoForm() {
     fileInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (validateFile(file, errorContainer)) {
+            // Récupérer le nom du fichier sans extension
+            const fileName = file.name.replace(/\.[^/.]+$/, "");
+            // Mettre à jour le champ titre
+            titleInput.value = fileName;
+
             const reader = new FileReader();
             reader.onload = (e) => {
                 imagePreview.src = e.target.result;
@@ -244,6 +249,8 @@ async function openAddPhotoForm() {
                 infoText.classList.add('hidden');
             };
             reader.readAsDataURL(file);
+            // Vérifier la validité du formulaire après avoir défini le titre
+            checkFormValidity(fileInput, titleInput, categorySelect, validateButton);
         } else {
             fileInput.value = '';
         }
@@ -286,18 +293,14 @@ async function openAddPhotoForm() {
     // Récupération des références pour la validation
     const titleInput = document.getElementById('title');
     const categorySelect = document.getElementById('category');
+    const formInputs = [fileInput, titleInput, categorySelect];
 
     // Validation en temps réel pour changer couleur du bouton de validation
-    fileInput.addEventListener('change', () => {
-        checkFormValidity(fileInput, titleInput, categorySelect, validateButton);
-    });
-
-    titleInput.addEventListener('input', () => {
-        checkFormValidity(fileInput, titleInput, categorySelect, validateButton);
-    });
-
-    categorySelect.addEventListener('change', () => {
-        checkFormValidity(fileInput, titleInput, categorySelect, validateButton);
+    formInputs.forEach(input => {
+        const eventType = input === fileInput ? 'change' : 'input';
+        input.addEventListener(eventType, () => {
+            checkFormValidity(fileInput, titleInput, categorySelect, validateButton);
+        });
     });
     
     // Gestion de la soumission du formulaire
