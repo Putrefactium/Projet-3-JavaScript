@@ -16,23 +16,22 @@ import { filterWorks } from "./works.js";
  */
 export function initializeFilterButtons() {
     const filterButtons = document.querySelectorAll('.filters button');
+    const filtersContainer = document.querySelector('.filters');
     
-    filterButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Gestion de l'état actif
-            const previousActive = document.getElementById('active');
-            if (previousActive) {
-                previousActive.removeAttribute('id');
-            }
-            this.setAttribute('id', 'active');
-            
-            // Déduire le categoryId à partir de la classe
-            const categoryId = getCategoryIdFromClass(this.classList);
-            
-            // Filtrer les works
-            filterWorks(categoryId);
+    return localStorage.getItem('token') 
+        ? filtersContainer?.style.setProperty('display', 'none')
+        : filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const previousActive = document.getElementById('active');
+                if (previousActive) {
+                    previousActive.removeAttribute('id');
+                }
+                this.setAttribute('id', 'active');
+                
+                const categoryId = getCategoryIdFromClass(this.classList);
+                filterWorks(categoryId);
+            });
         });
-    });
 }
 
 /**
