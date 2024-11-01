@@ -107,45 +107,40 @@ export const updateLoginLogoutButton = () => {
     })();
 };
 
-export function displayEditionMode() {
+export const displayEditionMode = () => {
     const token = localStorage.getItem('token');
     
-    if (token) {
-        // Créer la div edition-mode
-        const editionMode = document.createElement('div');
-        editionMode.className = 'edition-mode';
-        
-        // Création du lien edition-mode
-        const link = document.createElement('a');
-        link.href = '#';
-
-        // Ajout de l'écouteur d'événement pour ouvrir la modale
-        link.onclick = (e) => {
-            e.preventDefault();
-            openModal(e);
+    token && (() => {
+        const createEditionMode = () => {
+            const editionMode = document.createElement('div');
+            editionMode.className = 'edition-mode';
+            
+            const link = document.createElement('a');
+            link.href = '#';
+            link.onclick = e => {
+                e.preventDefault();
+                openModal(e);
+            };
+            
+            const img = document.createElement('img');
+            img.src = './assets/icons/edit.png';
+            img.alt = 'Mode édition';
+            
+            const text = document.createElement('p');
+            text.textContent = 'Mode édition';
+            
+            return { editionMode, link, img, text };
         };
+
+        const { editionMode, link, img, text } = createEditionMode();
         
-        // Création de l'image
-        const img = document.createElement('img');
-        img.src = './assets/icons/edit.png';
-        img.alt = 'Mode édition';
-        
-        // Création du texte
-        const text = document.createElement('p');
-        text.textContent = 'Mode édition';
-        
-        // Assemblage des éléments dans edition-mode
-        link.appendChild(img);
-        link.appendChild(text);
+        link.append(img, text);
         editionMode.appendChild(link);
         
-        // Récupérer le header et l'insérer au dessus
         const header = document.querySelector('header');
-        if (header) {
-            header.parentNode.insertBefore(editionMode, header);
-        }
-    }
-}
+        header?.parentNode.insertBefore(editionMode, header);
+    })();
+};
 
 
 
