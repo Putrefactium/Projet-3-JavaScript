@@ -92,24 +92,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-export function updateLoginLogoutButton() {
+export const updateLoginLogoutButton = () => {
     const loginLogoutLink = document.getElementById("login-logout");
     const token = localStorage.getItem("token");
 
-    // Si un token existe (utilisateur connecté)
-    if (token) {
-        // Modification du texte du bouton pour afficher logout
+    token && (() => {
         loginLogoutLink.textContent = "logout";
         loginLogoutLink.href = "#";
-        // Ajout de l'écouteur d'événement pour la déconnexion
-        loginLogoutLink.addEventListener("click", (e) => {
+        loginLogoutLink.addEventListener("click", e => {
             e.preventDefault();
-            // Suppression du token et rechargement de la page
             localStorage.removeItem("token");
             window.location.reload();
         });
-    }
-}
+    })();
+};
 
 export function displayEditionMode() {
     const token = localStorage.getItem('token');
