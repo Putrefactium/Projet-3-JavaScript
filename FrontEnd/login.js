@@ -8,7 +8,7 @@
 /**
  * Import des dépendances nécessaires
  */
-import { openModal } from './modale.js';
+import { openModal } from './modal.js';
 
 
 /**
