@@ -42,7 +42,6 @@ export function initializeFilterButtons() {
  * 2 pour appartements, 3 pour hôtels)
  */
 function getCategoryIdFromClass(classList) {
-    if (classList.contains('all')) return 0;    // Afficher tous les works
     if (classList.contains('items')) return 1;
     if (classList.contains('apartments')) return 2;
     if (classList.contains('hotels')) return 3;
