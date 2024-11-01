@@ -73,23 +73,15 @@ export async function handleLogin(event) {
 
 // Initialisation du gestionnaire d'événements
 document.addEventListener('DOMContentLoaded', () => {
-    if (window.location.pathname.includes('login.html')) {
-        // Vérification si l'utilisateur est déjà connecté
-        const token = localStorage.getItem('token');
-        if (token) {
-            // Redirection vers la page d'accueil si déjà connecté
-            window.location.href = './index.html';
-            return;
-        }
-
-        const loginForm = document.querySelector('#login form');
-        if (loginForm) {
-            loginForm.addEventListener('submit', (event) => {
-                event.preventDefault();
-                handleLogin(event);
-            });
-        }
-    }
+    const isLoginPage = window.location.pathname.includes('login.html');
+    const token = localStorage.getItem('token');
+    
+    isLoginPage && token && (window.location.href = './index.html');
+    
+    isLoginPage && document.querySelector('#login form')?.addEventListener('submit', event => {
+        event.preventDefault();
+        handleLogin(event);
+    });
 });
 
 export const updateLoginLogoutButton = () => {
