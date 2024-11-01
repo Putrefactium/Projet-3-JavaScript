@@ -4,6 +4,7 @@
  * - Affichage des images et titres des projets
  */
 
+
 /**
  * Génère l'affichage des travaux dans la galerie principale
  * @param {Array} works - Tableau contenant les travaux à afficher
@@ -28,6 +29,10 @@ export async function generateWorks(works) {
     });
 }
 
+/**
+ * Filtre les travaux selon une catégorie donnée et met à jour l'affichage
+ * @param {number} categoryId - L'identifiant de la catégorie à filtrer (0 pour tous les travaux)
+ */
 export function filterWorks(categoryId) {
     const works = JSON.parse(window.localStorage.getItem("works"));
     
