@@ -27,3 +27,18 @@ export async function generateWorks(works) {
         gallery.appendChild(figure);
     });
 }
+
+export function filterWorks(categoryId) {
+    const works = JSON.parse(window.localStorage.getItem("works"));
+    
+    const filteredWorks = categoryId === 0 
+        ? works 
+        : works.filter(work => work.categoryId === categoryId);
+    
+    // Vider la galerie avant d'afficher les nouveaux works
+    const gallery = document.querySelector(".gallery");
+    gallery.innerHTML = "";
+    
+    // Générer les nouveaux works filtrés
+    generateWorks(filteredWorks);
+}
