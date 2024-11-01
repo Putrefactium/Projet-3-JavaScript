@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 export function updateLoginLogoutButton() {
-    const loginLogoutLink = document.getElementById("loginLogout");
+    const loginLogoutLink = document.getElementById("login-logout");
     const token = localStorage.getItem("token");
 
     // Si un token existe (utilisateur connecté)
