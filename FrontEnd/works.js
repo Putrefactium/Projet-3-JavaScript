@@ -12,6 +12,12 @@
 export async function generateWorks(works) {
     const gallery = document.querySelector(".gallery");
     gallery.innerHTML = '';
+
+    // Vérification que works est un tableau valide
+    if (!Array.isArray(works)) {
+        console.error("works n'est pas un tableau valide:", works);
+        return;
+    }
     
     works.forEach(({ imageUrl, title }) => {  
         const figure = document.createElement("figure");
