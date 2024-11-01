@@ -10,7 +10,17 @@
  */
 import { openModal } from './modale.js';
 
-// Fonction principale d'authentification
+
+/**
+ * Gère le processus de connexion de l'utilisateur
+ * - Vérifie si l'utilisateur est sur la page de connexion
+ * - Récupère les identifiants saisis (email et mot de passe)
+ * - Envoie une requête d'authentification à l'API
+ * - En cas de succès : stocke le token et redirige vers la page d'accueil
+ * - En cas d'échec : affiche un message d'erreur approprié
+ * @param {Event} event - L'événement de soumission du formulaire
+ * @returns {void}
+ */
 export async function handleLogin(event) {
     // Return rapide si nous ne sommes pas sur la page de connexion
     if (!window.location.pathname.includes('login.html')) return;
@@ -61,7 +71,15 @@ export async function handleLogin(event) {
     }
 }
 
-// Initialisation du gestionnaire d'événements
+
+/**
+ * Gestion des événements de la page de connexion
+ * - Vérifie si l'utilisateur est sur la page de connexion
+ * - Redirige vers la page d'accueil si déjà connecté (token présent)
+ * - Ajoute un écouteur d'événement sur le formulaire de connexion
+ * - Empêche le comportement par défaut du formulaire
+ * - Appelle la fonction handleLogin pour gérer la connexion
+ */
 document.addEventListener('DOMContentLoaded', () => {
     const isLoginPage = window.location.pathname.includes('login.html');
     const token = localStorage.getItem('token');
@@ -74,6 +92,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+/**
+ * Met à jour le bouton de connexion/déconnexion
+ * - Récupère le lien de connexion/déconnexion dans le DOM
+ * - Vérifie si un token d'authentification existe
+ * - Si un token existe:
+ *   - Change le texte du lien en "logout"
+ *   - Ajoute un gestionnaire d'événements pour la déconnexion
+ *   - Supprime le token et recharge la page lors de la déconnexion
+ */
 export const updateLoginLogoutButton = () => {
     const loginLogoutLink = document.getElementById("login-logout");
     const token = localStorage.getItem("token");
@@ -89,6 +116,15 @@ export const updateLoginLogoutButton = () => {
     })();
 };
 
+/**
+ * Gère l'affichage du mode édition pour les utilisateurs connectés
+ * - Vérifie si un token d'authentification existe
+ * - Si un token existe:
+ *   - Crée une barre d'édition en haut de la page
+ *   - Contient une icône et un texte "Mode édition"
+ *   - Ajoute un lien cliquable qui ouvre une modal
+ *   - Insère la barre d'édition avant le header de la page
+ */
 export const displayEditionMode = () => {
     const token = localStorage.getItem('token');
     
