@@ -335,6 +335,7 @@ async function openAddPhotoForm() {
             
             const modalContainer = document.querySelector('.modal-container');
             modalContainer.remove();
+            openModal(new Event('click'));
     
         } catch (error) {
             errorContainer.textContent = 'Erreur lors de l\'envoi du formulaire';
