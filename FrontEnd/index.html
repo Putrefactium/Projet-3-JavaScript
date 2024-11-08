@@ -9,15 +9,15 @@
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./css/main.css">
-	<script type="module" src="script.js" defer></script>
+	<script type="module" src="./scripts/script.js" defer></script>
 </head>
 <body>
 <header>
 	<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
 	<nav>
 		<ul>
-			<li>projets</li>
-			<li>contact</li>
+			<li><a href="#portfolio">projets</a></li>
+			<li><a href="#contact">contact</a></li>
 			<li><a href="login.html" id="login-logout">login</a></li>
 			<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
 		</ul>
@@ -36,14 +36,16 @@
 		</article>
 	</section>
 	<section id="portfolio">
-		<h2>Mes Projets</h2>
-		<div class="filters">
-			<button id="active" class="all">Tous</button>
-			<button class="items">Objets</button>
-			<button class="apartments">Appartements</button>
-			<button class="hotels">Hotels & restaurants</button>
+		<div class="gallery-header">
+			<h2>Mes Projets</h2>
+			<!-- Le bouton de modification est géré par le module display.js -->
 		</div>
-		<div class="gallery"></div>
+		<div class="filters">
+			<!-- Les boutons de filtre sont gérés par le module buttons.js -->
+		</div>
+		<div class="gallery">
+			<!-- Les projets sont gérés par le module works.js -->
+		</div>
 	</section>
 	<section id="contact">
 		<h2>Contact</h2>
