@@ -5,7 +5,7 @@ import { handleLoginRoutine } from './login.js';
 
 // Initialisation : Récupération des travaux depuis le localStorage ou l'API
 let works = JSON.parse(window.localStorage.getItem("works")) ?? await (async () => {
-    const answer = await fetch("http://localhost:5678/api/works");
+    const answer = await fetch("https://projet-3-javascript.onrender.com/api/works");
     const works = await answer.json();
     window.localStorage.setItem("works", JSON.stringify(works));
     return works;
