@@ -14,7 +14,7 @@ import { generateWorks } from './works.js';
 let works = window.localStorage.getItem("works");
 
 if (!works){
-    const answer = await fetch("http://localhost:5678/api/works");
+    const answer = await fetch("https://projet-3-javascript.onrender.com/api/works");
     works = await answer.json();
 
     const valueWorks = JSON.stringify(works);
@@ -160,7 +160,7 @@ async function deleteWork(workId) {
     // Tentative de suppression du projet via l'API
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
+        const response = await fetch(`https://projet-3-javascript.onrender.com/api/works/${workId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -192,7 +192,7 @@ async function deleteWork(workId) {
  * @returns {Promise<Array>} Tableau mis à jour des projets
  */
 async function refreshWorks() {
-    const response = await fetch("http://localhost:5678/api/works");
+    const response = await fetch("https://projet-3-javascript.onrender.com/api/works");
     const works = await response.json();
     window.localStorage.setItem("works", JSON.stringify(works));
     return works;
@@ -361,7 +361,7 @@ function handleFileUpload(e, elements) {
  * - Gère la soumission du formulaire
  */
 async function openAddPhotoForm() {
-    const categories = await fetch("http://localhost:5678/api/categories")
+    const categories = await fetch("https://projet-3-javascript.onrender.com/api/categories")
         .then(response => response.json());
     
     const { modalContent, header } = createAddPhotoBaseElements();
@@ -399,7 +399,7 @@ async function handleFormSubmit(e, { fileInput, titleInput, categorySelect }) {
         formData.append('title', titleInput.value);
         formData.append('category', parseInt(categorySelect.value));
 
-        const response = await fetch('http://localhost:5678/api/works', {
+        const response = await fetch('https://projet-3-javascript.onrender.com/api/works', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`

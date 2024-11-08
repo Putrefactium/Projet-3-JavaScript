@@ -59,7 +59,7 @@ const validateInputs = (email, password, showError) => {
  * @returns {Promise<Object>} La réponse de l'API contenant le token
  */
 const loginToApi = async (email, password) => {
-    const response = await fetch('http://localhost:5678/api/users/login', {
+    const response = await fetch('https://projet-3-javascript.onrender.com/api/users/login', {
         method: 'POST',
         headers: {
             'Accept': 'application/json',

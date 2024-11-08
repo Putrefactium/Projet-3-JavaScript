@@ -61,7 +61,7 @@ export async function initializeFilterButtons() {
 
     try {
         // Récupération des catégories depuis l'API
-        const categories = await fetch('http://localhost:5678/api/categories')
+        const categories = await fetch('https://projet-3-javascript.onrender.com/api/categories')
             .then(response => response.json());
 
         const createAndAppendButton = (name, id, isActive = false) => 
