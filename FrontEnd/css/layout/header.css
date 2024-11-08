@@ -11,13 +11,14 @@ h1 {
     font-family: var(--font-primary);
     font-size: var(--font-size-lg);
     font-weight: 800;
-    color: var(--color-secondary);
+    color: var(--color-orange);
 }
 
 h1 > span {
     font-family: var(--font-secondary);
     font-size: var(--font-size-xs);
     letter-spacing: 0.1em;
+    color: var(--color-dark-orange);
 }
 
 nav ul {
