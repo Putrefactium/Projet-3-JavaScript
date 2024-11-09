@@ -97,6 +97,9 @@ export async function handleLogin(event) {
             localStorage.setItem('userId', data.userId);
             window.location.href = './index.html';
         }
+        else {
+            showError("Identifiant ou mot de passe incorrect");
+        }
     } catch (error) {
         console.error('Erreur:', error);
         showError("Une erreur est survenue lors de la connexion");
