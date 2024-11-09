@@ -11,11 +11,14 @@ let works = JSON.parse(window.localStorage.getItem("works")) ?? await (async () 
     return works;
 })();
 
-// Affichage des travaux dans la galerie principale
-generateWorks(works);
+// Vérification si nous sommes sur la page index.html
+if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
+    // Affichage des travaux dans la galerie principale
+    generateWorks(works);
 
-// Initialisation des boutons de filtre
-initializeFilterButtons();
+    // Initialisation des boutons de filtre
+    initializeFilterButtons();
+}
 
 // Affichage du bouton login/logout
 document.addEventListener("DOMContentLoaded", updateLoginLogoutButton);
