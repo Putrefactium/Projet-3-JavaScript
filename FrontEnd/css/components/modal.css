@@ -185,6 +185,7 @@
     font-size: var(--font-size-sm);
     border: none;
     box-shadow: var(--box-shadow);
+    padding-left: var(--spacing-xs);
 }
 
 .form-group label {
