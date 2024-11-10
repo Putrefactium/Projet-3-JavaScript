@@ -1,4 +1,4 @@
-import { generateWorks} from "./works.js";
+import { generateWorks } from "./works.js";
 import { initializeFilterButtons } from './filterButtons.js';
 import { displayEditionMode, updateLoginLogoutButton, displayEditButton } from './display.js';
 import { handleLoginRoutine } from './login.js';

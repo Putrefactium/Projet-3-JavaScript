@@ -5,6 +5,9 @@
  * @module login
  */
 
+import { sanitizer } from './utils/sanitizer.js';
+
+
 /**
  * Configure l'affichage des messages d'erreur
  * - Prend en paramètre l'élément HTML qui affichera l'erreur
@@ -81,12 +84,20 @@ const loginToApi = async (email, password) => {
  * @param {Event} event - L'événement de soumission du formulaire
  */
 export async function handleLogin(event) {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+    const rawEmail = document.getElementById('email').value;
+    const rawPassword = document.getElementById('password').value;
     const errorDisplay = document.getElementById('error-message');
     const showError = configureErrorDisplay(errorDisplay);
 
+    const email = sanitizer.sanitizeString(rawEmail);
+    const password = sanitizer.sanitizeString(rawPassword);
+
     if (!validateInputs(email, password, showError)) {
+        return;
+    }
+
+    if (!sanitizer.validateEmail(email)) {
+        showError("Format d'email invalide");
         return;
     }
 

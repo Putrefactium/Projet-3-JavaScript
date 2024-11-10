@@ -9,6 +9,7 @@
  */
 
 import { generateWorks } from './works.js';
+import { sanitizer } from './utils/sanitizer.js';
 
 // Initialisation : Récupération des travaux depuis le localStorage ou l'API
 let works = window.localStorage.getItem("works");
@@ -394,10 +395,24 @@ async function handleFormSubmit(e, { fileInput, titleInput, categorySelect }) {
     const errorContainer = document.querySelector('.error-message');
 
     try {
-        const formData = new FormData();
-        formData.append('image', fileInput.files[0]);
-        formData.append('title', titleInput.value);
-        formData.append('category', parseInt(categorySelect.value));
+         // Sanitize le titre
+         const sanitizedTitle = sanitizer.sanitizeString(titleInput.value.trim());
+
+         // Validation supplémentaire du titre
+         if (sanitizedTitle.length < 3 || sanitizedTitle.length > 100) {
+             throw new Error('Le titre doit contenir entre 3 et 100 caractères');
+         }
+ 
+         const formData = new FormData();
+         formData.append('image', fileInput.files[0]);
+         formData.append('title', sanitizedTitle);
+         formData.append('category', parseInt(categorySelect.value));
+ 
+         // Validation supplémentaire pour la catégorie
+         const categoryId = parseInt(categorySelect.value);
+         if (isNaN(categoryId) || categoryId < 1) {
+             throw new Error('Catégorie invalide');
+         }
 
         const response = await fetch('http://localhost:5678/api/works', {
             method: 'POST',
