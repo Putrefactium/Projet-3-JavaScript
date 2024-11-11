@@ -21,3 +21,15 @@ img {
     max-width: 100%;
     height: auto;
 }
+
+input {
+    padding-left: 10px;
+}
+
+textarea {
+    padding-left: 10px;
+    padding-top: 10px;
+    font-family: 'Work Sans';
+    font-size: 14px;
+}
+
