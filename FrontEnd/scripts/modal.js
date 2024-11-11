@@ -9,7 +9,7 @@
  */
 
 import { generateWorks } from './works.js';
-import { sanitizer } from './utils/sanitizer.js';
+import { sanitizer } from './sanitizer.js';
 
 // Initialisation : Récupération des travaux depuis le localStorage ou l'API
 let works = window.localStorage.getItem("works");

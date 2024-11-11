@@ -5,7 +5,7 @@
  * @module login
  */
 
-import { sanitizer } from './utils/sanitizer.js';
+import { sanitizer } from './sanitizer.js';
 
 
 /**
