@@ -2,14 +2,8 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <!-- Ajout de la CSP - anti XSS -->
-    <meta http-equiv="Content-Security-Policy" 
-        content="default-src 'self'; 
-        script-src 'self'; 
-        style-src 'self' https://fonts.googleapis.com; 
-        img-src 'self' data: https:; 
-        font-src 'self' https://fonts.gstatic.com;
-        connect-src 'self' http://localhost:5678;">
+	<!-- Ajout de la CSP - anti XSS -->
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://localhost:5678;">
     <title>Sophie Bluel - Se Connecter</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -42,10 +36,10 @@
 			<label for="email">E-mail</label>
 			<input type="email" name="email" id="email" data-type="email">
 			<label for="password">Mot de passe</label>
-			<input type="text" name="password" id="password" data-type="password" style="-webkit-text-security: disc;">
+			<input type="text" name="password" id="password" data-type="password">
 			<input type="submit" value="Se connecter">
 			<a href="#" class="forgot-password">Mot de passe oublié ?</a>
-			<div class="error-message" id="error-message" style="display: none;"></div>
+			<div class="error-message" id="error-message"></div>
 		</form>
 	</section>
 </main>
