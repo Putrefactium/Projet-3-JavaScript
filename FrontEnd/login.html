@@ -2,16 +2,14 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-	<!-- Ajout de la CSP - anti XSS -->
-	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://localhost:5678;">
-    <title>Sophie Bluel - Se Connecter</title>
+	<title>Sophie Bluel - Se Connecter</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./css/main.css">
-	<script type="module" src="./scripts/script.js" defer></script>
+	<script type="module" src="./scripts/loginEvent.js" defer></script>
 </head>
 <body>
 <header>
@@ -34,9 +32,9 @@
 		<h2>Log In</h2>
 		<form action="#" method="post" autocomplete="off">
 			<label for="email">E-mail</label>
-			<input type="email" name="email" id="email" data-type="email">
+			<input type="email" name="email" id="email" data-type="email" autocomplete="email">
 			<label for="password">Mot de passe</label>
-			<input type="text" name="password" id="password" data-type="password">
+			<input type="password" name="password" id="password" data-type="password" autocomplete="current-password">
 			<input type="submit" value="Se connecter">
 			<a href="#" class="forgot-password">Mot de passe oublié ?</a>
 			<div class="error-message" id="error-message"></div>
