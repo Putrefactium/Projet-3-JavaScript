@@ -200,7 +200,7 @@ function createAddPhotoBaseElements() {
     `;
     const header = document.createRange().createContextualFragment(headerHTML);
     
-    header.querySelector('.modal-close').addEventListener('click', () => {
+    header.querySelector('.modal-close').addEventListener('click', () => { // Ajoute un écouteur d'événement sur le bouton de fermeture de la modal
         document.querySelector('.modal-container').remove();
     });
 
@@ -252,9 +252,9 @@ function createFormFields(categories) {
                 <label for="category">Catégorie</label>
                 <select id="category" name="category" required>
                     ${categories
-                        .sort((a, b) => (a.id === 1 ? -1 : b.id === 1 ? 1 : 0))
-                        .map(category => `<option value="${category.id}">${category.name}</option>`)
-                        .join('')}
+                        .sort((a, b) => (a.id === 1 ? -1 : b.id === 1 ? 1 : 0)) // Trie les catégories par ordre alphabétique
+                        .map(category => `<option value="${category.id}">${category.name}</option>`) // Crée les options pour chaque catégorie
+                        .join('')} 
                 </select>
             </div>
         </div>
@@ -285,9 +285,9 @@ function setupUploadEvents(form, errorContainer) {
     const categorySelect = form.querySelector('#category');
     const validateButton = form.querySelector('.validate-button');
 
-    addPhotoBtn.addEventListener('click', () => fileInput.click());
+    addPhotoBtn.addEventListener('click', () => fileInput.click()); // Ajoute un écouteur d'événement sur le bouton d'ajout de photo qui ouvre la fenêtre de sélection de fichier
 
-    fileInput.addEventListener('change', (e) => handleFileUpload(e, {
+    fileInput.addEventListener('change', (e) => handleFileUpload(e, { // Ajoute un écouteur d'événement sur le champ de sélection de fichier qui gère l'upload et la prévisualisation de l'image
         fileInput,
         titleInput,
         imagePreview,
@@ -312,29 +312,29 @@ function setupUploadEvents(form, errorContainer) {
  * @param {Object} elements - Références vers les éléments de l'interface
  */
 function handleFileUpload(e, elements) {
-    const file = e.target.files[0];
-    if (validateFile(file, elements.errorContainer)) {
-        const fileName = file.name.replace(/\.[^/.]+$/, "");
-        elements.titleInput.value = fileName;
+    const file = e.target.files[0]; // Récupère le fichier sélectionné
+    if (validateFile(file, elements.errorContainer)) { // Valide le fichier
+        const fileName = file.name.replace(/\.[^/.]+$/, ""); // Remplace l'extension du fichier par une chaîne vide
+        elements.titleInput.value = fileName; // Pré-remplit le titre avec le nom du fichier
 
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            elements.imagePreview.src = e.target.result;
-            elements.imagePreview.classList.remove('hidden');
-            elements.imageIcon.classList.add('hidden');
-            elements.addPhotoBtn.classList.add('hidden');
-            elements.infoText.classList.add('hidden');
+        const reader = new FileReader(); 
+        reader.onload = (e) => { 
+            elements.imagePreview.src = e.target.result; // Prévisualise l'image
+            elements.imagePreview.classList.remove('hidden'); // Affiche la prévisualisation
+            elements.imageIcon.classList.add('hidden'); // Masque l'icône d'image
+            elements.addPhotoBtn.classList.add('hidden'); // Masque le bouton d'ajout de photo
+            elements.infoText.classList.add('hidden'); // Masque le texte d'info
         };
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(file); 
         
-        checkFormValidity(
-            elements.fileInput,
+        checkFormValidity( // Vérifie la validité du formulaire
+            elements.fileInput, 
             elements.titleInput,
             elements.categorySelect,
             elements.validateButton
         );
     } else {
-        elements.fileInput.value = '';
+        elements.fileInput.value = ''; // Réinitialise le champ de sélection de fichier
     }
 }
 
@@ -347,22 +347,22 @@ function handleFileUpload(e, elements) {
  */
 async function openAddPhotoForm() {
     const categories = await fetch("http://localhost:5678/api/categories")
-        .then(response => response.json());
+        .then(response => response.json()); // Récupère les catégories depuis l'API
     
-    const { modalContent, header } = createAddPhotoBaseElements();
+    const { modalContent, header } = createAddPhotoBaseElements(); // Crée la structure de base
     
     const form = document.createElement('form');
-    form.className = 'add-photo-form';
+    form.className = 'add-photo-form'; // Ajoute une classe au formulaire
     
-    const uploadZone = createUploadZone();
-    const formFields = createFormFields(categories);
-    form.append(uploadZone, formFields);
+    const uploadZone = createUploadZone(); // Crée la zone d'upload
+    const formFields = createFormFields(categories); // Crée les champs du formulaire
+    form.append(uploadZone, formFields); // Ajoute la zone d'upload et les champs au formulaire
     
-    modalContent.append(header, form);
+    modalContent.append(header, form); // Ajoute l'en-tête et le formulaire à la modal
     
-    const { fileInput, titleInput, categorySelect } = setupUploadEvents(form, form.querySelector('.error-message'));
+    const { fileInput, titleInput, categorySelect } = setupUploadEvents(form, form.querySelector('.error-message')); // Configure les événements liés à l'upload de photo
     
-    form.addEventListener('submit', e => handleFormSubmit(e, { fileInput, titleInput, categorySelect }));
+    form.addEventListener('submit', e => handleFormSubmit(e, { fileInput, titleInput, categorySelect })); // Ajoute un écouteur d'événement sur le formulaire qui gère la soumission
 }
 
 /**
@@ -375,11 +375,11 @@ async function openAddPhotoForm() {
  */
 
 async function handleFormSubmit(e, { fileInput, titleInput, categorySelect }) {
-    e.preventDefault();
-    const errorContainer = document.querySelector('.error-message');
+    e.preventDefault(); // Empêche le comportement par défaut du formulaire
+    const errorContainer = document.querySelector('.error-message'); // Récupère le conteneur d'erreur
 
     try {
-         // Sanitize le titre
+         // Sanitize le titre pour éviter les XSS et SQLi
          const sanitizedTitle = sanitizer.sanitizeString(titleInput.value.trim());
 
          // Validation supplémentaire du titre
@@ -387,32 +387,32 @@ async function handleFormSubmit(e, { fileInput, titleInput, categorySelect }) {
              throw new Error('Le titre doit contenir entre 3 et 100 caractères');
          }
  
-         const formData = new FormData();
-         formData.append('image', fileInput.files[0]);
-         formData.append('title', sanitizedTitle);
-         formData.append('category', parseInt(categorySelect.value));
+         const formData = new FormData(); // Crée un objet FormData pour envoyer les données du formulaire
+         formData.append('image', fileInput.files[0]); // Ajoute le fichier sélectionné au formulaire
+         formData.append('title', sanitizedTitle); // Ajoute le titre sanitizé au formulaire
+         formData.append('category', parseInt(categorySelect.value)); // Ajoute la catégorie sélectionnée au formulaire
  
          // Validation supplémentaire pour la catégorie
-         const categoryId = parseInt(categorySelect.value);
-         if (isNaN(categoryId) || categoryId < 1) {
+         const categoryId = parseInt(categorySelect.value); 
+         if (isNaN(categoryId) || categoryId < 1) { 
              throw new Error('Catégorie invalide');
          }
 
-        const response = await fetch('http://localhost:5678/api/works', {
+        const response = await fetch('http://localhost:5678/api/works', { // Envoie les données du formulaire à l'API
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}` // Ajoute le token dans les headers
             },
             body: formData
         });
 
-        if (!response.ok) throw new Error('Erreur lors de l\'envoi');
+        if (!response.ok) throw new Error('Erreur lors de l\'envoi'); // Gère les erreurs de la requête
 
-        const updatedWorks = await refreshWorks();
-        await generateWorks(updatedWorks);
+        const updatedWorks = await refreshWorks(); // Met à jour les works dans le sessionStorage
+        await generateWorks(updatedWorks); // Rafraîchit la galerie
         
-        document.querySelector('.modal-container').remove();
-        openModal(new Event('click'));
+        document.querySelector('.modal-container').remove(); // Ferme la modal
+        openModal(new Event('click')); // Rafraîchit la galerie
 
     } catch (error) {
         errorContainer.textContent = 'Erreur lors de l\'envoi du formulaire';
@@ -429,12 +429,12 @@ async function handleFormSubmit(e, { fileInput, titleInput, categorySelect }) {
  * @param {HTMLButtonElement} validateButton - Bouton de validation
  */
 function checkFormValidity(fileInput, titleInput, categorySelect, validateButton) {
-    const hasFile = fileInput.files && fileInput.files.length > 0;
-    const hasTitle = titleInput.value.trim() !== '';
-    const hasCategory = categorySelect.value !== '';
-    const isFileValid = hasFile && validateFile(fileInput.files[0]);
+    const hasFile = fileInput.files && fileInput.files.length > 0; // Vérifie si un fichier a bien été sélectionné
+    const hasTitle = titleInput.value.trim() !== ''; // Vérifie si le titre n'est pas vide
+    const hasCategory = categorySelect.value !== ''; // Vérifie si une catégorie a bien été sélectionnée
+    const isFileValid = hasFile && validateFile(fileInput.files[0]); // Vérifie si le fichier est valide
 
-    if (hasFile && hasTitle && hasCategory && isFileValid) {
+    if (hasFile && hasTitle && hasCategory && isFileValid) { // Si tout est valide, change la couleur du bouton de validation
         validateButton.style.backgroundColor = '#1D6154';
     } else {
         validateButton.style.backgroundColor = '#A7A7A7';
@@ -451,11 +451,11 @@ function checkFormValidity(fileInput, titleInput, categorySelect, validateButton
  */
 function validateFile(file, errorContainer = null) {
     if (errorContainer) {
-        errorContainer.textContent = '';
-        errorContainer.classList.add('hidden');
+        errorContainer.textContent = ''; // Réinitialise le conteneur d'erreur
+        errorContainer.classList.add('hidden'); // Masque le conteneur d'erreur
     }
 
-    if (!file) {
+    if (!file) { // Si aucun fichier n'a été sélectionné, affiche un message d'erreur
         if (errorContainer) {
             errorContainer.textContent = 'Veuillez sélectionner un fichier';
             errorContainer.classList.remove('hidden');
@@ -463,8 +463,8 @@ function validateFile(file, errorContainer = null) {
         return false;
     }
 
-    const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-    if (!validTypes.includes(file.type)) {
+    const validTypes = ['image/jpeg', 'image/png', 'image/jpg']; // Liste des types de fichiers valides
+    if (!validTypes.includes(file.type)) { // Si le type de fichier n'est pas valide, affiche un message d'erreur
         if (errorContainer) {
             errorContainer.textContent = 'Format de fichier invalide. Veuillez sélectionner une image JPG ou PNG';
             errorContainer.classList.remove('hidden');
@@ -472,8 +472,8 @@ function validateFile(file, errorContainer = null) {
         return false;
     }
 
-    const maxSize = 4 * 1024 * 1024; // 4Mo
-    if (file.size > maxSize) {
+    const maxSize = 4 * 1024 * 1024; // 4Mo maximum
+    if (file.size > maxSize) { // Si le fichier est trop volumineux, affiche un message d'erreur
         if (errorContainer) {
             errorContainer.textContent = 'Le fichier est trop volumineux. La taille maximum est de 4Mo';
             errorContainer.classList.remove('hidden');
