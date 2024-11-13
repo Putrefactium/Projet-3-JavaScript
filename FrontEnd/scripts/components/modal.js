@@ -24,12 +24,12 @@ function createModalStructure() {
             <div class="modal-content"></div>
         </div>
     `;
-    const container = document.createRange().createContextualFragment(modalHTML);
+    const container = document.createRange().createContextualFragment(modalHTML); 
     const modalContainer = container.querySelector('.modal-container');
     const modalContent = container.querySelector('.modal-content');
     
     modalContainer.addEventListener('click', e => 
-        e.target === modalContainer && modalContainer.remove()
+        e.target === modalContainer && modalContainer.remove() // Si la cible du clic est la modal, on la supprime pour gérer le clic en dehors qui ferme la modal
     );
     
     return { modalContainer, modalContent };
@@ -48,7 +48,7 @@ function createModalHeader(modalContainer) {
     const header = document.createRange().createContextualFragment(headerHTML);
     
     header.querySelector('.modal-close')
-        .addEventListener('click', () => modalContainer.remove());
+        .addEventListener('click', () => modalContainer.remove()); // Ajoute un écouteur d'événement sur le bouton de fermeture qui ferme la modal
     
     return header;
 }
@@ -73,8 +73,8 @@ function createGalleryItem({ id, imageUrl, title }) {
     const item = document.createRange().createContextualFragment(itemHTML);
     
     item.querySelector('.delete-button').addEventListener('click', async (e) => {
-        e.preventDefault();
-        await deleteWork(id);
+        e.preventDefault(); // Empêche le comportement par défaut du bouton
+        await deleteWork(id); // Appelle la fonction deleteWork pour supprimer le work lors de la pression du bouton de suppression
     });
     
     return item;
@@ -110,7 +110,7 @@ function createModalFooter() {
     const footer = document.createRange().createContextualFragment(footerHTML);
     
     footer.querySelector('.add-photo-button')
-        .addEventListener('click', () => openAddPhotoForm());
+        .addEventListener('click', () => openAddPhotoForm()); // Ajoute un écouteur d'événement sur le bouton d'ajout de photo qui ouvre la modal d'ajout de photo
     
     return footer;
 }
@@ -121,21 +121,17 @@ function createModalFooter() {
  * @param {Event} event - Événement déclencheur
  */
 export async function openModal(event) {
-    event.preventDefault();
+    event.preventDefault(); // Empêche le comportement par défaut de l'événement
     
-    // Création de la structure de base
-    const { modalContainer, modalContent } = createModalStructure();
+    const { modalContainer, modalContent } = createModalStructure(); // Création de la structure de base
+    modalContent.appendChild(createModalHeader(modalContainer)); // Ajoute l'en-tête de la modale
     
-    // Ajout des différentes sections
-    modalContent.appendChild(createModalHeader(modalContainer));
+    const works = await loadWorks(); // Récupère les works depuis l'API
+
+    modalContent.appendChild(createGallery(works)); // Ajoute la galerie à la modale
+    modalContent.appendChild(createModalFooter()); // Ajoute le pied de page de la modale
     
-    const works = await loadWorks();
-    modalContent.appendChild(createGallery(works));
-    
-    modalContent.appendChild(createModalFooter());
-    
-    // Ajout à la page
-    document.body.appendChild(modalContainer);
+    document.body.appendChild(modalContainer); // Ajout à la page
 }
 
 /**
@@ -148,8 +144,8 @@ async function deleteWork(workId) {
 
     // Tentative de suppression du projet via l'API
     try {
-        const token = sessionStorage.getItem('token');
-        const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
+        const token = sessionStorage.getItem('token'); // Récupère le token dans le sessionStorage
+        const response = await fetch(`http://localhost:5678/api/works/${workId}`, { // Effectue une requête DELETE pour supprimer le projet
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -160,8 +156,8 @@ async function deleteWork(workId) {
         if (response.ok) {
 
             // Mise à jour des données et rafraîchissement de l'affichage
-            const updatedWorks = await refreshWorks();
-            generateWorks(updatedWorks); 
+            const updatedWorks = await refreshWorks(); // Mise à jour des works dans le sessionStorage
+            generateWorks(updatedWorks); // Rafraîchit la galerie
             
             // Rafraîchissement de la modale
             const modalContainer = document.querySelector('.modal-container');

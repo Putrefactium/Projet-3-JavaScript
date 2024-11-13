@@ -13,8 +13,8 @@ import { filterWorks, generateWorks } from "../features/works/works.js";
  * @returns {boolean} - True si les filtres doivent être cachés
  */
 function shouldHideFilters(filtersContainer) {
-    filtersContainer?.style.setProperty('display', sessionStorage.getItem('token') ? 'none' : '');
-    return !!sessionStorage.getItem('token');
+    filtersContainer?.style.setProperty('display', sessionStorage.getItem('token') ? 'none' : ''); // Si le token est présent, masque le container des filtres, sinon l'affiche
+    return !!sessionStorage.getItem('token'); // Retourne true si le token est présent, sinon false
 }
 
 /**
@@ -25,11 +25,11 @@ function shouldHideFilters(filtersContainer) {
  * @returns {HTMLButtonElement} - Le bouton créé
  */
 function createFilterButton(text, categoryId, isActive = false) {
-    const button = document.createElement('button');
-    button.textContent = text;
+    const button = document.createElement('button'); 
+    button.textContent = text; 
     button.dataset.categoryId = categoryId;
 
-    isActive && button.setAttribute('id', 'active');
+    isActive && button.setAttribute('id', 'active'); // Si le bouton doit être actif par défaut, ajoute l'id "active"
 
     return button;
 }
@@ -39,14 +39,14 @@ function createFilterButton(text, categoryId, isActive = false) {
  * @param {Event} event - L'événement de clic
  */
 function handleFilterClick(event) {
-    const previousActive = document.getElementById('active');
+    const previousActive = document.getElementById('active'); // Sélectionne le bouton actif précédent
 
-    previousActive && previousActive.removeAttribute('id');
+    previousActive && previousActive.removeAttribute('id'); // Si le bouton actif précédent existe, retire l'id "active"
 
-    event.target.setAttribute('id', 'active');  
-    const categoryId = parseInt(event.target.dataset.categoryId) || 0;
-    const filteredWorks = filterWorks(categoryId);
-    generateWorks(filteredWorks);
+    event.target.setAttribute('id', 'active'); // Ajoute l'id "active" au bouton cliqué
+    const categoryId = parseInt(event.target.dataset.categoryId) || 0; // Récupère l'ID de la catégorie du bouton cliqué
+    const filteredWorks = filterWorks(categoryId); // Filtre les works selon la catégorie du bouton cliqué
+    generateWorks(filteredWorks); // Génère l'affichage des works filtrés
 }
 
 /**
@@ -55,7 +55,7 @@ function handleFilterClick(event) {
 export async function initializeFilterButtons() {
     const filtersContainer = document.querySelector('.filters');
     
-    shouldHideFilters(filtersContainer) && (() => {
+    shouldHideFilters(filtersContainer) && (() => { // Si les filtres doivent être masqués, on sort de la fonction
         return;
     })();
 
@@ -64,16 +64,16 @@ export async function initializeFilterButtons() {
         const categories = await fetch('http://localhost:5678/api/categories')
             .then(response => response.json());
 
-        const createAndAppendButton = (name, id, isActive = false) => 
-            filtersContainer?.appendChild(createFilterButton(name, id, isActive));
+        const createAndAppendButton = (name, id, isActive = false) =>  // Crée un bouton de filtre et l'ajoute au container des filtres
+            filtersContainer?.appendChild(createFilterButton(name, id, isActive)); 
 
         // Ajout du bouton "Tous"
         createAndAppendButton('Tous', '0', true);
 
-        // Ajout des boutons de catégories avec map
+        // Ajout des autres boutons de catégories avec map
         categories.map(({ name, id }) => createAndAppendButton(name, id));
 
-        // Ajout des écouteurs d'événements
+        // Ajout des écouteurs d'événements sur chaque bouton de filtre
         document.querySelectorAll('.filters button')
             .forEach(button => button.addEventListener('click', handleFilterClick));
             

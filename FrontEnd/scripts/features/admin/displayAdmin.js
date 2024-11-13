@@ -18,10 +18,10 @@ import { openModal } from '../../components/modal.js';
  *   - Insère la barre d'édition avant le header de la page
  */
 export const displayEditionMode = () => {
-    const token = sessionStorage.getItem('token');
+    const token = sessionStorage.getItem('token'); // Récupère le token dans le sessionStorage
     
-    token && (() => {
-        const editionModeHTML = `
+    token && (() => { // Si le token existe : 
+        const editionModeHTML = ` 
             <div class="edition-mode">
                 <a href="#" class="edition-link">
                     <img src="./assets/icons/edit.png" alt="Mode édition">
@@ -30,8 +30,8 @@ export const displayEditionMode = () => {
             </div>
         `;
         
-        const header = document.querySelector('header');
-        header?.parentNode.insertBefore(
+        const header = document.querySelector('header'); // Sélectionne le header de la page
+        header?.parentNode.insertBefore( // Insère la barre d'édition avant le header
             document.createRange().createContextualFragment(editionModeHTML), 
             header
         );
@@ -54,17 +54,17 @@ export const displayEditionMode = () => {
  *   - Supprime le token et recharge la page lors de la déconnexion
  */
 export const updateLoginLogoutButton = () => {
-    const loginLogoutLink = document.getElementById("login-logout");
-    const token = sessionStorage.getItem("token");
+    const loginLogoutLink = document.getElementById("login-logout"); // Sélectionne le lien de connexion/déconnexion dans le DOM
+    const token = sessionStorage.getItem("token"); // Récupère le token dans le sessionStorage
 
-    token && (() => {
-        loginLogoutLink.textContent = "logout";
-        loginLogoutLink.href = "#";
-        loginLogoutLink.addEventListener("click", e => {
-            e.preventDefault();
-            sessionStorage.removeItem("token");
-            sessionStorage.removeItem("userId");
-            window.location.reload();
+    token && (() => { // Si le token existe :
+        loginLogoutLink.textContent = "logout"; // Change le texte du lien en "logout"
+        loginLogoutLink.href = "#"; // Change l'URL du lien en "#"
+        loginLogoutLink.addEventListener("click", e => { // Ajoute un écouteur d'événement sur le lien
+            e.preventDefault(); // Empêche le comportement par défaut du lien
+            sessionStorage.removeItem("token"); // Supprime le token dans le sessionStorage
+            sessionStorage.removeItem("userId"); // Supprime l'ID utilisateur dans le sessionStorage
+            window.location.reload(); // Recharge la page
         });
     })();
 };
@@ -77,9 +77,9 @@ export const updateLoginLogoutButton = () => {
  *   - Ajoute un lien cliquable qui ouvre une modal
  */
 export const displayEditButton = () => {
-    const token = sessionStorage.getItem('token');
+    const token = sessionStorage.getItem('token'); // Récupère le token dans le sessionStorage
     
-    token && (() => {
+    token && (() => { // Si le token existe :
         const buttonHTML = `
             <button class="edit-button">
                 <a href="#" onclick="event.preventDefault(); openModal(event);">
@@ -89,10 +89,10 @@ export const displayEditButton = () => {
             </button>
         `;
         
-        const galleryHeader = document.querySelector('.gallery-header');
-        const titleH2 = galleryHeader.querySelector('h2');
+        const galleryHeader = document.querySelector('.gallery-header'); // Sélectionne la section de la galerie dans le DOM
+        const titleH2 = galleryHeader.querySelector('h2'); // Sélectionne le titre h2 de la galerie
         
-        titleH2.insertAdjacentHTML('afterend', buttonHTML);
+        titleH2.insertAdjacentHTML('afterend', buttonHTML); // Insère le bouton de modification après le titre h2
 
         // Ajouter l'écouteur d'événements après l'insertion
         document.querySelector('.edit-button').addEventListener('click', (e) => {

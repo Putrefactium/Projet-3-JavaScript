@@ -18,7 +18,7 @@ import { sanitizer } from '../../core/sanitizer.js';
  */
 const configureErrorDisplay = (errorDisplay) => {
     return (message) => {
-        Object.assign(errorDisplay.style, {
+        Object.assign(errorDisplay.style, { 
             display: 'block',
             fontSize: '1.5em',
             textAlign: 'center',
@@ -92,26 +92,26 @@ export async function handleLogin(event) {
     const email = sanitizer.sanitizeString(rawEmail);
     const password = sanitizer.sanitizeString(rawPassword);
 
-    if (!validateInputs(email, password, showError)) {
+    if (!validateInputs(email, password, showError)) { // Si les entrées ne sont pas valides, on sort de la fonction
         return;
     }
 
-    if (!sanitizer.validateEmail(email)) {
+    if (!sanitizer.validateEmail(email)) { // Si l'email n'est pas valide, on affiche un message d'erreur et on sort de la fonction
         showError("Format d'email invalide");
         return;
     }
 
     try {
-        const data = await loginToApi(email, password);
-        if (data.token) {
+        const data = await loginToApi(email, password); // Tente de se connecter à l'API
+        if (data.token) { // Si la connexion réussit, on stocke le token et l'ID utilisateur dans le sessionStorage
             sessionStorage.setItem('token', data.token);
             sessionStorage.setItem('userId', data.userId);
-            window.location.href = './index.html';
+            window.location.href = './index.html'; // Redirige vers la page d'accueil
         }
-        else {
+        else { // Si la connexion échoue, on affiche un message d'erreur
             showError("Identifiant ou mot de passe incorrect");
         }
-    } catch (error) {
+    } catch (error) { // Si une erreur survient, on affiche un message d'erreur
         console.error('Erreur:', error);
         showError("Une erreur est survenue lors de la connexion");
     }
@@ -127,14 +127,12 @@ export async function handleLogin(event) {
  * - Appelle la fonction handleLogin lors de la soumission
  */
 export const handleLoginRoutine = () => {
-    const isLoginPage = window.location.pathname.includes('login.html');
-    const token = sessionStorage.getItem('token');
+    const token = sessionStorage.getItem('token'); // Récupère le token dans le sessionStorage
+    token && (window.location.href = './index.html'); // Si le token existe, redirige vers la page d'accueil
     
-    isLoginPage && token && (window.location.href = './index.html');
-    
-    isLoginPage && document.querySelector('#login form')?.addEventListener('submit', event => {
-        event.preventDefault();
-        handleLogin(event);
+    document.querySelector('#login form')?.addEventListener('submit', event => { // Ajoute un écouteur d'événement sur le formulaire de connexion
+        event.preventDefault(); // Empêche le comportement par défaut du formulaire
+        handleLogin(event); // Appelle la fonction handleLogin lors de la soumission
     });
 }
 
