@@ -96,11 +96,6 @@ export async function handleLogin(event) {
         return;
     }
 
-    if (!sanitizer.validateEmail(email)) { // Si l'email n'est pas valide, on affiche un message d'erreur et on sort de la fonction
-        showError("Format d'email invalide");
-        return;
-    }
-
     try {
         const data = await loginToApi(email, password); // Tente de se connecter à l'API
         if (data.token) { // Si la connexion réussit, on stocke le token et l'ID utilisateur dans le sessionStorage
@@ -135,6 +130,22 @@ export const handleLoginRoutine = () => {
         handleLogin(event); // Appelle la fonction handleLogin lors de la soumission
     });
 }
+/**
+ * Vérifie la validité du token d'authentification
+ * - Vérifie si un token existe dans le sessionStorage
+ * - Si aucun token n'existe, redirige vers la page de connexion
+ * - Retourne false si pas de token, true si token présent
+ * @returns {boolean} - true si le token est présent, false sinon
+ */
+
+export const checkTokenValidity = () => {
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+        window.location.href = './login.html';
+        return false;
+    }
+    return true;
+};
 
 
 
