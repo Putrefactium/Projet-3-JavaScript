@@ -11,6 +11,7 @@
 import { generateWorks } from '../features/works/works.js';
 import { loadWorks } from '../features/works/loadWorks.js';
 import { sanitizer } from '../core/sanitizer.js';
+import { checkTokenValidity } from '../features/auth/login.js';
 
 /**
  * Crée la structure HTML de base de la modale
@@ -141,6 +142,7 @@ export async function openModal(event) {
  * @throws {Error} Lance une erreur si la suppression échoue
  */
 async function deleteWork(workId) {
+    if (!checkTokenValidity()) return;
 
     // Tentative de suppression du projet via l'API
     try {
@@ -376,6 +378,8 @@ async function openAddPhotoForm() {
 
 async function handleFormSubmit(e, { fileInput, titleInput, categorySelect }) {
     e.preventDefault(); // Empêche le comportement par défaut du formulaire
+    if (!checkTokenValidity()) return;
+    
     const errorContainer = document.querySelector('.error-message'); // Récupère le conteneur d'erreur
 
     try {
