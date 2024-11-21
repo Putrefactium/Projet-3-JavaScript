@@ -8,6 +8,44 @@
 import { sanitizer } from '../../core/sanitizer.js';
 import { loginToApi } from '../../services/apiService.js';
 
+/**
+ * Gère le processus de connexion
+ * - Récupère les valeurs des champs email et mot de passe
+ * - Valide les entrées utilisateur
+ * - Tente de se connecter via l'API
+ * - Stocke le token et l'ID utilisateur si la connexion réussit
+ * - Redirige vers la page d'accueil en cas de succès
+ * - Affiche un message d'erreur en cas d'échec
+ * @param {Event} event - L'événement de soumission du formulaire
+ */
+export async function handleLogin(event) {
+    const rawEmail = document.getElementById('email').value;
+    const rawPassword = document.getElementById('password').value;
+    const errorDisplay = document.getElementById('error-message');
+    const showError = configureErrorDisplay(errorDisplay);
+
+    const email = sanitizer.sanitizeString(rawEmail);
+    const password = sanitizer.sanitizeString(rawPassword);
+
+    if (!validateInputs(email, password, showError)) { // Si les entrées ne sont pas valides, on sort de la fonction
+        return;
+    }
+
+    try {
+        const data = await loginToApi(email, password); // Tente de se connecter à l'API
+        if (data.token) { // Si la connexion réussit, on stocke le token et l'ID utilisateur dans le sessionStorage
+            sessionStorage.setItem('token', data.token);
+            sessionStorage.setItem('userId', data.userId);
+            window.location.href = './index.html'; // Redirige vers la page d'accueil
+        }
+        else { // Si la connexion échoue, on affiche un message d'erreur
+            showError("Identifiant ou mot de passe incorrect");
+        }
+    } catch (error) { // Si une erreur survient, on affiche un message d'erreur
+        console.error('Erreur:', error);
+        showError("Une erreur est survenue lors de la connexion");
+    }
+}
 
 /**
  * Configure l'affichage des messages d'erreur
@@ -47,45 +85,6 @@ const validateInputs = (email, password, showError) => {
 
     return true; 
 };
-
-/**
- * Gère le processus de connexion
- * - Récupère les valeurs des champs email et mot de passe
- * - Valide les entrées utilisateur
- * - Tente de se connecter via l'API
- * - Stocke le token et l'ID utilisateur si la connexion réussit
- * - Redirige vers la page d'accueil en cas de succès
- * - Affiche un message d'erreur en cas d'échec
- * @param {Event} event - L'événement de soumission du formulaire
- */
-export async function handleLogin(event) {
-    const rawEmail = document.getElementById('email').value;
-    const rawPassword = document.getElementById('password').value;
-    const errorDisplay = document.getElementById('error-message');
-    const showError = configureErrorDisplay(errorDisplay);
-
-    const email = sanitizer.sanitizeString(rawEmail);
-    const password = sanitizer.sanitizeString(rawPassword);
-
-    if (!validateInputs(email, password, showError)) { // Si les entrées ne sont pas valides, on sort de la fonction
-        return;
-    }
-
-    try {
-        const data = await loginToApi(email, password); // Tente de se connecter à l'API
-        if (data.token) { // Si la connexion réussit, on stocke le token et l'ID utilisateur dans le sessionStorage
-            sessionStorage.setItem('token', data.token);
-            sessionStorage.setItem('userId', data.userId);
-            window.location.href = './index.html'; // Redirige vers la page d'accueil
-        }
-        else { // Si la connexion échoue, on affiche un message d'erreur
-            showError("Identifiant ou mot de passe incorrect");
-        }
-    } catch (error) { // Si une erreur survient, on affiche un message d'erreur
-        console.error('Erreur:', error);
-        showError("Une erreur est survenue lors de la connexion");
-    }
-}
 
 /**
  * Gère la routine de connexion
