@@ -9,7 +9,7 @@
  */
 
 import { generateWorks } from '../features/works/works.js';
-import { loadWorks } from '../features/works/loadWorks.js';
+import { loadWorks, deleteWork, refreshWorks, fetchCategories, postFormData } from '../services/apiService.js';
 import { sanitizer } from '../core/sanitizer.js';
 import { checkTokenValidity } from '../features/auth/login.js';
 
@@ -75,7 +75,8 @@ function createGalleryItem({ id, imageUrl, title }) {
     
     item.querySelector('.delete-button').addEventListener('click', async (e) => {
         e.preventDefault(); // Empêche le comportement par défaut du bouton
-        await deleteWork(id); // Appelle la fonction deleteWork pour supprimer le work lors de la pression du bouton de suppression
+        await handleWorkDeletion(id); // Appelle la fonction deleteWork pour supprimer le work lors de la pression du bouton de suppression
+
     });
     
     return item;
@@ -136,53 +137,25 @@ export async function openModal(event) {
 }
 
 /**
- * Supprime un projet de la galerie et met à jour l'affichage
- * Cette fonction gère la suppression côté API et interface
- * @param {number} workId - Identifiant du projet à supprimer
- * @throws {Error} Lance une erreur si la suppression échoue
+ * Gère la suppression d'un work
+ * - Vérifie la validité du token
+ * - Supprime le work via l'API
+ * - Rafraîchit la galerie
  */
-async function deleteWork(workId) {
+async function handleWorkDeletion(workId) {
     if (!checkTokenValidity()) return;
 
-    // Tentative de suppression du projet via l'API
     try {
-        const token = sessionStorage.getItem('token'); // Récupère le token dans le sessionStorage
-        const response = await fetch(`http://localhost:5678/api/works/${workId}`, { // Effectue une requête DELETE pour supprimer le projet
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        // Vérification de la réponse de l'API
-        if (response.ok) {
-
-            // Mise à jour des données et rafraîchissement de l'affichage
-            const updatedWorks = await refreshWorks(); // Mise à jour des works dans le sessionStorage
-            generateWorks(updatedWorks); // Rafraîchit la galerie
-            
-            // Rafraîchissement de la modale
-            const modalContainer = document.querySelector('.modal-container');
-            modalContainer.remove();
-            openModal(new Event('click'));
-        } else {
-            throw new Error('Erreur lors de la suppression');
-        }
+        await deleteWork(workId); // Supprime le work via l'API
+        const updatedWorks = await refreshWorks(); // Rafraîchit les works dans le sessionStorage
+        generateWorks(updatedWorks); // Rafraîchit le contenu de la galerie dans le DOM
+        
+        const modalContainer = document.querySelector('.modal-container');
+        modalContainer.remove(); // Ferme la modal
+        openModal(new Event('click')); // Rouvre la modal à jour
     } catch (error) {
-        console.error('Erreur lors de la suppression:', error);
+        console.error('Erreur lors de la suppression du projet', error); // Gère les erreurs
     }
-}
-
-/**
- * Rafraîchit la liste des projets depuis l'API
- * Met à jour le sessionStorage avec les nouvelles données
- * @returns {Promise<Array>} Tableau mis à jour des projets
- */
-async function refreshWorks() {
-    const response = await fetch("http://localhost:5678/api/works");
-    const works = await response.json();
-    window.sessionStorage.setItem("works", JSON.stringify(works));
-    return works;
 }
 
 /**
@@ -236,7 +209,7 @@ function createUploadZone() {
 }
 
 /**
- * Crée les champs du formulaire d'ajout de photo
+ * Crée les champs du formulaire d'ajout de photo : Titre et Catégorie
  * - Génère les champs titre et catégorie
  * - Trie et affiche les catégories disponibles
  * - Ajoute le bouton de validation
@@ -348,12 +321,10 @@ function handleFileUpload(e, elements) {
  * - Gère la soumission du formulaire
  */
 async function openAddPhotoForm() {
-    const categories = await fetch("http://localhost:5678/api/categories")
-        .then(response => response.json()); // Récupère les catégories depuis l'API
-    
+    const categories = await fetchCategories(); // Récupère les catégories depuis l'API
     const { modalContent, header } = createAddPhotoBaseElements(); // Crée la structure de base
     
-    const form = document.createElement('form');
+    const form = document.createElement('form'); // Crée le formulaire
     form.className = 'add-photo-form'; // Ajoute une classe au formulaire
     
     const uploadZone = createUploadZone(); // Crée la zone d'upload
@@ -375,7 +346,6 @@ async function openAddPhotoForm() {
  * @param {Event} e - Événement de soumission du formulaire
  * @param {Object} formElements - Références vers les éléments du formulaire
  */
-
 async function handleFormSubmit(e, { fileInput, titleInput, categorySelect }) {
     e.preventDefault(); // Empêche le comportement par défaut du formulaire
     if (!checkTokenValidity()) return;
@@ -383,34 +353,26 @@ async function handleFormSubmit(e, { fileInput, titleInput, categorySelect }) {
     const errorContainer = document.querySelector('.error-message'); // Récupère le conteneur d'erreur
 
     try {
-         // Sanitize le titre pour éviter les XSS et SQLi
-         const sanitizedTitle = sanitizer.sanitizeString(titleInput.value.trim());
+        // Sanitize le titre pour éviter les XSS et SQLi
+        const sanitizedTitle = sanitizer.sanitizeString(titleInput.value.trim());
 
-         // Validation supplémentaire du titre
-         if (sanitizedTitle.length < 3 || sanitizedTitle.length > 100) {
-             throw new Error('Le titre doit contenir entre 3 et 100 caractères');
-         }
- 
-         const formData = new FormData(); // Crée un objet FormData pour envoyer les données du formulaire
-         formData.append('image', fileInput.files[0]); // Ajoute le fichier sélectionné au formulaire
-         formData.append('title', sanitizedTitle); // Ajoute le titre sanitizé au formulaire
-         formData.append('category', parseInt(categorySelect.value)); // Ajoute la catégorie sélectionnée au formulaire
- 
-         // Validation supplémentaire pour la catégorie
-         const categoryId = parseInt(categorySelect.value); 
-         if (isNaN(categoryId) || categoryId < 1) { 
-             throw new Error('Catégorie invalide');
-         }
+        // Validation supplémentaire du titre
+        if (sanitizedTitle.length < 3 || sanitizedTitle.length > 100) {
+            throw new Error('Le titre doit contenir entre 3 et 100 caractères');
+        }
 
-        const response = await fetch('http://localhost:5678/api/works', { // Envoie les données du formulaire à l'API
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${sessionStorage.getItem('token')}` // Ajoute le token dans les headers
-            },
-            body: formData
-        });
+        const formData = new FormData(); // Crée un objet FormData pour envoyer les données du formulaire
+        formData.append('image', fileInput.files[0]); // Ajoute le fichier sélectionné au formulaire
+        formData.append('title', sanitizedTitle); // Ajoute le titre sanitizé au formulaire
+        formData.append('category', parseInt(categorySelect.value)); // Ajoute la catégorie sélectionnée au formulaire
 
-        if (!response.ok) throw new Error('Erreur lors de l\'envoi'); // Gère les erreurs de la requête
+        // Validation supplémentaire pour la catégorie
+        const categoryId = parseInt(categorySelect.value); 
+        if (isNaN(categoryId) || categoryId < 1) { 
+            throw new Error('Catégorie invalide');
+        }
+
+        await postFormData(formData); // Envoie les données du formulaire à l'API
 
         const updatedWorks = await refreshWorks(); // Met à jour les works dans le sessionStorage
         await generateWorks(updatedWorks); // Rafraîchit la galerie
