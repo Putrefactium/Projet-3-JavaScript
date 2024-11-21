@@ -6,6 +6,7 @@
  */
 
 import { filterWorks, generateWorks } from "../features/works/works.js";
+import { fetchCategories } from "../services/apiService.js";
 
 /**
  * Vérifie si les filtres doivent être affichés selon l'état de connexion
@@ -61,8 +62,7 @@ export async function initializeFilterButtons() {
 
     try {
         // Récupération des catégories depuis l'API
-        const categories = await fetch('http://localhost:5678/api/categories')
-            .then(response => response.json());
+        const categories = await fetchCategories();
 
         const createAndAppendButton = (name, id, isActive = false) =>  // Crée un bouton de filtre et l'ajoute au container des filtres
             filtersContainer?.appendChild(createFilterButton(name, id, isActive)); 
