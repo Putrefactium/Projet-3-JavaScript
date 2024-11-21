@@ -13,6 +13,28 @@ import { loadWorks, deleteWork, refreshWorks, fetchCategories, postFormData } fr
 import { sanitizer } from '../core/sanitizer.js';
 import { checkTokenValidity } from '../features/auth/login.js';
 
+
+/** MODAL DE GALERIE */
+
+/**
+ * Ouvre la modale et initialise son contenu
+ * Cette fonction gère l'affichage initial de la modale avec la galerie
+ * @param {Event} event - Événement déclencheur
+ */
+export async function openModal(event) {
+    event.preventDefault(); // Empêche le comportement par défaut de l'événement
+    
+    const { modalContainer, modalContent } = createModalStructure(); // Création de la structure de base
+    modalContent.appendChild(createModalHeader(modalContainer)); // Ajoute l'en-tête de la modale
+    
+    const works = await loadWorks(); // Récupère les works depuis l'API
+
+    modalContent.appendChild(createGallery(works)); // Ajoute la galerie à la modale
+    modalContent.appendChild(createModalFooter()); // Ajoute le pied de page de la modale
+    
+    document.body.appendChild(modalContainer); // Ajout à la page
+}
+
 /**
  * Crée la structure HTML de base de la modale
  * @returns {Object} Objet contenant les références vers le container et le contenu de la modale
@@ -112,28 +134,9 @@ function createModalFooter() {
     const footer = document.createRange().createContextualFragment(footerHTML);
     
     footer.querySelector('.add-photo-button')
-        .addEventListener('click', () => openAddPhotoForm()); // Ajoute un écouteur d'événement sur le bouton d'ajout de photo qui ouvre la modal d'ajout de photo
+        .addEventListener('click', () => openAddPhotoModal()); // Ajoute un écouteur d'événement sur le bouton d'ajout de photo qui ouvre la modal d'ajout de photo
     
     return footer;
-}
-
-/**
- * Ouvre la modale et initialise son contenu
- * Cette fonction gère l'affichage initial de la modale avec la galerie
- * @param {Event} event - Événement déclencheur
- */
-export async function openModal(event) {
-    event.preventDefault(); // Empêche le comportement par défaut de l'événement
-    
-    const { modalContainer, modalContent } = createModalStructure(); // Création de la structure de base
-    modalContent.appendChild(createModalHeader(modalContainer)); // Ajoute l'en-tête de la modale
-    
-    const works = await loadWorks(); // Récupère les works depuis l'API
-
-    modalContent.appendChild(createGallery(works)); // Ajoute la galerie à la modale
-    modalContent.appendChild(createModalFooter()); // Ajoute le pied de page de la modale
-    
-    document.body.appendChild(modalContainer); // Ajout à la page
 }
 
 /**
@@ -156,6 +159,33 @@ async function handleWorkDeletion(workId) {
     } catch (error) {
         console.error('Erreur lors de la suppression du projet', error); // Gère les erreurs
     }
+}
+
+/** MODAL D'AJOUT DE PHOTO */
+
+/**
+ * Ouvre et initialise le formulaire d'ajout de photo
+ * - Récupère les catégories depuis l'API
+ * - Crée la structure du formulaire
+ * - Configure les événements
+ * - Gère la soumission du formulaire
+ */
+async function openAddPhotoModal() {
+    const categories = await fetchCategories(); // Récupère les catégories depuis l'API
+    const { modalContent, header } = createAddPhotoBaseElements(); // Crée la structure de base
+    
+    const form = document.createElement('form'); // Crée le formulaire
+    form.className = 'add-photo-form'; // Ajoute une classe au formulaire
+    
+    const uploadZone = createUploadZone(); // Crée la zone d'upload
+    const formFields = createFormFields(categories); // Crée les champs du formulaire
+    form.append(uploadZone, formFields); // Ajoute la zone d'upload et les champs au formulaire
+    
+    modalContent.append(header, form); // Ajoute l'en-tête et le formulaire à la modal
+    
+    const { fileInput, titleInput, categorySelect } = setupUploadEvents(form, form.querySelector('.error-message')); // Configure les événements liés à l'upload de photo
+    
+    form.addEventListener('submit', e => handleFormSubmit(e, { fileInput, titleInput, categorySelect })); // Ajoute un écouteur d'événement sur le formulaire qui gère la soumission
 }
 
 /**
@@ -311,31 +341,6 @@ function handleFileUpload(e, elements) {
     } else {
         elements.fileInput.value = ''; // Réinitialise le champ de sélection de fichier
     }
-}
-
-/**
- * Ouvre et initialise le formulaire d'ajout de photo
- * - Récupère les catégories depuis l'API
- * - Crée la structure du formulaire
- * - Configure les événements
- * - Gère la soumission du formulaire
- */
-async function openAddPhotoForm() {
-    const categories = await fetchCategories(); // Récupère les catégories depuis l'API
-    const { modalContent, header } = createAddPhotoBaseElements(); // Crée la structure de base
-    
-    const form = document.createElement('form'); // Crée le formulaire
-    form.className = 'add-photo-form'; // Ajoute une classe au formulaire
-    
-    const uploadZone = createUploadZone(); // Crée la zone d'upload
-    const formFields = createFormFields(categories); // Crée les champs du formulaire
-    form.append(uploadZone, formFields); // Ajoute la zone d'upload et les champs au formulaire
-    
-    modalContent.append(header, form); // Ajoute l'en-tête et le formulaire à la modal
-    
-    const { fileInput, titleInput, categorySelect } = setupUploadEvents(form, form.querySelector('.error-message')); // Configure les événements liés à l'upload de photo
-    
-    form.addEventListener('submit', e => handleFormSubmit(e, { fileInput, titleInput, categorySelect })); // Ajoute un écouteur d'événement sur le formulaire qui gère la soumission
 }
 
 /**
