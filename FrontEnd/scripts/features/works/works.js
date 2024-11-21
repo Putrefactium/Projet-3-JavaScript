@@ -5,7 +5,7 @@
  * @module works
  */
 
-import { loadWorks } from './loadWorks.js';
+import { loadWorks } from '../../services/apiService.js';
 
 /**
  * Génère l'affichage des works dans la galerie principale
