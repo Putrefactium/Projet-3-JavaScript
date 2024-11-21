@@ -6,6 +6,7 @@
  */
 
 import { sanitizer } from '../../core/sanitizer.js';
+import { loginToApi } from '../../services/apiService.js';
 
 
 /**
@@ -31,10 +32,10 @@ const configureErrorDisplay = (errorDisplay) => {
 /**
  * Valide les entrées du formulaire de connexion
  * - Vérifie que les champs email et mot de passe ne sont pas vides
- * - Valide le format de l'adresse email avec une expression régulière
+ * - Valide le format de l'adresse email, on attendra en entrée un email valide et sanitized
  * - Affiche un message d'erreur si la validation échoue
  * @param {string} email - L'email saisi par l'utilisateur
- * @param {string} password - Le mot de passe saisi par l'utilisateur
+ * @param {string} password - Le mot de passe saisi par l'utilisateur   
  * @param {Function} showError - Fonction pour afficher les messages d'erreur
  * @returns {boolean} True si les entrées sont valides, false sinon
  */
@@ -44,33 +45,7 @@ const validateInputs = (email, password, showError) => {
         return false;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        showError("Veuillez entrer une adresse email valide");
-        return false;
-    }
-    return true;
-};
-
-/**
- * Envoie une requête de connexion à l'API
- * - Effectue une requête POST vers l'endpoint de connexion
- * - Envoie les identifiants au format JSON
- * - Retourne la réponse de l'API
- * @param {string} email - L'email de l'utilisateur
- * @param {string} password - Le mot de passe de l'utilisateur
- * @returns {Promise<Object>} La réponse de l'API contenant le token
- */
-const loginToApi = async (email, password) => {
-    const response = await fetch('http://localhost:5678/api/users/login', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-    });
-    return await response.json();
+    return true; 
 };
 
 /**
@@ -134,7 +109,6 @@ export const handleLoginRoutine = () => {
  * Vérifie la validité du token d'authentification
  * - Vérifie si un token existe dans le sessionStorage
  * - Si aucun token n'existe, redirige vers la page de connexion
- * - Retourne false si pas de token, true si token présent
  * @returns {boolean} - true si le token est présent, false sinon
  */
 
