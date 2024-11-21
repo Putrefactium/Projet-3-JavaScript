@@ -9,6 +9,38 @@ import { filterWorks, generateWorks } from "../features/works/works.js";
 import { fetchCategories } from "../services/apiService.js";
 
 /**
+ * Initialise les boutons de filtrage avec leurs écouteurs d'événements
+ */
+export async function initializeFilterButtons() {
+    const filtersContainer = document.querySelector('.filters');
+    
+    shouldHideFilters(filtersContainer) && (() => { // Si les filtres doivent être masqués, on sort de la fonction
+        return;
+    })();
+
+    try {
+        // Récupération des catégories depuis l'API
+        const categories = await fetchCategories();
+
+        const createAndAppendButton = (name, id, isActive = false) =>  // Crée un bouton de filtre et l'ajoute au container des filtres
+            filtersContainer?.appendChild(createFilterButton(name, id, isActive)); 
+
+        // Ajout du bouton "Tous"
+        createAndAppendButton('Tous', '0', true);
+
+        // Ajout des autres boutons de catégories avec map
+        categories.map(({ name, id }) => createAndAppendButton(name, id));
+
+        // Ajout des écouteurs d'événements sur chaque bouton de filtre
+        document.querySelectorAll('.filters button')
+            .forEach(button => button.addEventListener('click', handleFilterClick));
+            
+    } catch (error) {
+        console.error("Erreur lors de la récupération des catégories:", error);
+    }
+}
+
+/**
  * Vérifie si les filtres doivent être affichés selon l'état de connexion
  * @param {HTMLElement} filtersContainer - Le conteneur des filtres
  * @returns {boolean} - True si les filtres doivent être cachés
@@ -49,36 +81,3 @@ function handleFilterClick(event) {
     const filteredWorks = filterWorks(categoryId); // Filtre les works selon la catégorie du bouton cliqué
     generateWorks(filteredWorks); // Génère l'affichage des works filtrés
 }
-
-/**
- * Initialise les boutons de filtrage avec leurs écouteurs d'événements
- */
-export async function initializeFilterButtons() {
-    const filtersContainer = document.querySelector('.filters');
-    
-    shouldHideFilters(filtersContainer) && (() => { // Si les filtres doivent être masqués, on sort de la fonction
-        return;
-    })();
-
-    try {
-        // Récupération des catégories depuis l'API
-        const categories = await fetchCategories();
-
-        const createAndAppendButton = (name, id, isActive = false) =>  // Crée un bouton de filtre et l'ajoute au container des filtres
-            filtersContainer?.appendChild(createFilterButton(name, id, isActive)); 
-
-        // Ajout du bouton "Tous"
-        createAndAppendButton('Tous', '0', true);
-
-        // Ajout des autres boutons de catégories avec map
-        categories.map(({ name, id }) => createAndAppendButton(name, id));
-
-        // Ajout des écouteurs d'événements sur chaque bouton de filtre
-        document.querySelectorAll('.filters button')
-            .forEach(button => button.addEventListener('click', handleFilterClick));
-            
-    } catch (error) {
-        console.error("Erreur lors de la récupération des catégories:", error);
-    }
-}
-
