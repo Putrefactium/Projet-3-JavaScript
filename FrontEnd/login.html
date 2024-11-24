@@ -7,14 +7,14 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
-	<meta name="description" content="">
-	<link rel="stylesheet" href="./css/main.css">
+	<meta name="description" content="Page de connexion au portfolio de Sophie Bluel, architecte d'intérieur.">
+   	<link rel="stylesheet" href="./css/main.css">
 	<script type="module" src="./scripts/loginEvent.js" defer></script>
 </head>
 <body>
-<header>
+<header role="banner">
 	<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
-	<nav>
+	<nav role="navigation" aria-label="Navigation principale">
 		<ul>
 			<li><a href="index.html#portfolio">projets</a></li>
 			<li><a href="index.html#contact">contact</a></li>
@@ -27,10 +27,10 @@
 		</ul>
 	</nav>
 </header>
-<main>
-    <section id="login">
+<main role="main">
+    <section id="login" aria-label="Section de connexion">
 		<h2>Log In</h2>
-		<form action="#" method="post" autocomplete="on">
+		<form action="#" method="post" autocomplete="on" aria-label="Formulair de connexion">
 			<label for="email">E-mail</label>
 			<input type="email" name="email" id="email" data-type="email" autocomplete="email">
 			<label for="password">Mot de passe</label>
@@ -41,8 +41,8 @@
 		</form>
 	</section>
 </main>
-<footer>
-	<nav>
+<footer role="contentinfo">
+	<nav role="navigation" aria-label="Navigation secondaire">
 		<ul>
 			<li><a href="#">Mentions Légales</a></li>
 		</ul>
