@@ -22,17 +22,25 @@ import { showNotification } from '../../utils/uiComponents.js';
  * @param {Event} event - Événement déclencheur
  */
 export async function openModal(event) {
-    event.preventDefault(); // Empêche le comportement par défaut de l'événement
-    
-    const { modalContainer, modalContent } = createModalStructure(); // Création de la structure de base
-    modalContent.appendChild(createModalHeader(modalContainer)); // Ajoute l'en-tête de la modale
-    
-    const works = await loadWorks(); // Récupère les works depuis l'API
+    try {
+        event.preventDefault();
+        
+        const { modalContainer, modalContent } = createModalStructure();
+        modalContent.appendChild(createModalHeader(modalContainer));
+        
+        const works = await loadWorks();
+        if (!works || works.length === 0) {
+            throw new Error("Impossible de charger les projets");
+        }
 
-    modalContent.appendChild(createGallery(works)); // Ajoute la galerie à la modale
-    modalContent.appendChild(createModalFooter()); // Ajoute le pied de page de la modale
-    
-    document.body.appendChild(modalContainer); // Ajout à la page
+        modalContent.appendChild(createGallery(works));
+        modalContent.appendChild(createModalFooter());
+        
+        document.body.appendChild(modalContainer);
+    } catch (error) {
+        console.error("Erreur lors de l'ouverture de la modale:", error);
+        showNotification("Impossible d'ouvrir la galerie", 'error');
+    }
 }
 
 /**
@@ -85,23 +93,33 @@ function createModalHeader(modalContainer) {
  * @returns {DocumentFragment} Fragment contenant l'élément de galerie
  */
 function createGalleryItem({ id, imageUrl, title }) {
-    const itemHTML = `
-        <figure>
-            <button class="delete-button" data-work-id="${id}">
-                <img src="./assets/icons/trash.png" alt="Supprimer" class="trash-icon">
-            </button>
-            <img src="${imageUrl}" alt="${title}">
-        </figure>
-    `;
-    const item = document.createRange().createContextualFragment(itemHTML);
-    
-    item.querySelector('.delete-button').addEventListener('click', async (e) => {
-        e.preventDefault(); // Empêche le comportement par défaut du bouton
-        await handleWorkDeletion(id); // Appelle la fonction deleteWork pour supprimer le work lors de la pression du bouton de suppression
+    try {
+        if (!id || !imageUrl || !title) {
+            throw new Error("Données du projet incomplètes");
+        }
+        const itemHTML = `
+            <figure>
+                <button class="delete-button" data-work-id="${id}">
+                    <img src="./assets/icons/trash.png" alt="Supprimer" class="trash-icon">
+                </button>
+                <img src="${imageUrl}" alt="${title}">
+            </figure>
+        `;
+        const item = document.createRange().createContextualFragment(itemHTML);
+        
+        item.querySelector('.delete-button').addEventListener('click', async (e) => {
+            e.preventDefault(); // Empêche le comportement par défaut du bouton
+            await handleWorkDeletion(id); // Appelle la fonction deleteWork pour supprimer le work lors de la pression du bouton de suppression
 
-    });
-    
-    return item;
+        });
+        
+        return item;
+    } catch (error) {
+        console.error("Erreur lors de la création d'un élément de galerie:", error);
+        return document.createRange().createContextualFragment(
+            `<div class="gallery-item-error">Élément non disponible</div>`
+    );
+}
 }
 
 /**
@@ -174,21 +192,30 @@ async function handleWorkDeletion(workId) {
  * - Gère la soumission du formulaire
  */
 async function openAddPhotoModal() {
-    const categories = await fetchCategories(); // Récupère les catégories depuis l'API
-    const { modalContent, header } = createAddPhotoBaseElements(); // Crée la structure de base
+    try {
+        const categories = await fetchCategories();
+        if (!categories || categories.length === 0) {
+            throw new Error("Impossible de charger les catégories");
+        }
+
+        const { modalContent, header } = createAddPhotoBaseElements();
     
-    const form = document.createElement('form'); // Crée le formulaire
-    form.className = 'add-photo-form'; // Ajoute une classe au formulaire
-    
-    const uploadZone = createUploadZone(); // Crée la zone d'upload
-    const formFields = createFormFields(categories); // Crée les champs du formulaire
-    form.append(uploadZone, formFields); // Ajoute la zone d'upload et les champs au formulaire
-    
-    modalContent.append(header, form); // Ajoute l'en-tête et le formulaire à la modal
-    
-    const { fileInput, titleInput, categorySelect } = setupUploadEvents(form, form.querySelector('.error-message')); // Configure les événements liés à l'upload de photo
-    
-    form.addEventListener('submit', e => handleFormSubmit(e, { fileInput, titleInput, categorySelect })); // Ajoute un écouteur d'événement sur le formulaire qui gère la soumission
+        const form = document.createElement('form'); // Crée le formulaire
+        form.className = 'add-photo-form'; // Ajoute une classe au formulaire
+        
+        const uploadZone = createUploadZone(); // Crée la zone d'upload
+        const formFields = createFormFields(categories); // Crée les champs du formulaire
+        form.append(uploadZone, formFields); // Ajoute la zone d'upload et les champs au formulaire
+        
+        modalContent.append(header, form); // Ajoute l'en-tête et le formulaire à la modal
+        
+        const { fileInput, titleInput, categorySelect } = setupUploadEvents(form, form.querySelector('.error-message')); // Configure les événements liés à l'upload de photo
+        
+        form.addEventListener('submit', e => handleFormSubmit(e, { fileInput, titleInput, categorySelect })); // Ajoute un écouteur d'événement sur le formulaire qui gère la soumission
+    } catch (error) {
+        console.error("Erreur lors de l'ouverture de la modale d'ajout de photo:", error);
+        showNotification("Impossible d'ouvrir la modale d'ajout de photo", 'error');
+    }
 }
 
 /**
@@ -320,30 +347,122 @@ function setupUploadEvents(form, errorContainer) {
  * @param {Object} elements - Références vers les éléments de l'interface
  */
 function handleFileUpload(e, elements) {
-    const file = e.target.files[0]; // Récupère le fichier sélectionné
-    if (validateFile(file, elements.errorContainer)) { // Valide le fichier
-        const fileName = file.name.replace(/\.[^/.]+$/, ""); // Remplace l'extension du fichier par une chaîne vide
-        elements.titleInput.value = fileName; // Pré-remplit le titre avec le nom du fichier
+    const {
+        fileInput,
+        titleInput,
+        imagePreview,
+        imageIcon,
+        addPhotoBtn,
+        infoText,
+        categorySelect,
+        validateButton,
+        errorContainer
+    } = elements;
+    try {
+        // Vérification de la présence du fichier
+        const file = e.target.files[0];
+        if (!file) {
+            throw new Error("Aucun fichier sélectionné");
+        }
 
-        const reader = new FileReader(); 
-        reader.onload = (e) => { 
-            elements.imagePreview.src = e.target.result; // Prévisualise l'image
-            elements.imagePreview.classList.remove('hidden'); // Affiche la prévisualisation
-            elements.imageIcon.classList.add('hidden'); // Masque l'icône d'image
-            elements.addPhotoBtn.classList.add('hidden'); // Masque le bouton d'ajout de photo
-            elements.infoText.classList.add('hidden'); // Masque le texte d'info
-        };
-        reader.readAsDataURL(file); 
+        // Validation du fichier
+        if (!validateFile(file, errorContainer)) {
+            fileInput.value = '';
+            return;
+        }
+
+        // Extraction et nettoyage du nom du fichier pour le titre
+        const fileName = file.name.replace(/\.[^/.]+$/, "").trim();
+        if (fileName) {
+            titleInput.value = fileName;
+        }
+
+        // Configuration du FileReader
+        const reader = new FileReader();
         
-        checkFormValidity( // Vérifie la validité du formulaire
-            elements.fileInput, 
-            elements.titleInput,
-            elements.categorySelect,
-            elements.validateButton
-        );
-    } else {
-        elements.fileInput.value = ''; // Réinitialise le champ de sélection de fichier
+        reader.onerror = () => {
+            throw new Error("Erreur lors de la lecture du fichier");
+        };
+
+        reader.onload = (event) => {
+            try {
+                if (!event.target.result) {
+                    throw new Error("Échec de la prévisualisation");
+                }
+
+                // Mise à jour de l'interface
+                imagePreview.src = event.target.result;
+                imagePreview.classList.remove('hidden');
+                imageIcon.classList.add('hidden');
+                addPhotoBtn.classList.add('hidden');
+                infoText.classList.add('hidden');
+
+                // Vérification de la validité du formulaire
+                checkFormValidity(
+                    fileInput, 
+                    titleInput,
+                    categorySelect,
+                    validateButton
+                );
+
+                // Masquer le message d'erreur s'il était affiché
+                if (errorContainer) {
+                    errorContainer.classList.add('hidden');
+                    errorContainer.textContent = '';
+                }
+
+            } catch (error) {
+                console.error("Erreur lors de la prévisualisation:", error);
+                showNotification("Erreur lors de la prévisualisation de l'image", 'error');
+                
+                // Réinitialisation de l'interface en cas d'erreur
+                resetUploadInterface(elements);
+            }
+        };
+
+        // Démarrage de la lecture du fichier
+        reader.readAsDataURL(file);
+
+    } catch (error) {
+        console.error("Erreur lors du traitement du fichier:", error);
+        showNotification(error.message, 'error');
+        resetUploadInterface(elements);
     }
+}
+
+/**
+ * Réinitialise l'interface du formulaire d'upload à son état initial
+ * - Vide le champ de fichier
+ * - Masque l'aperçu de l'image
+ * - Affiche l'icône et le bouton d'ajout
+ * - Affiche le texte d'information
+ * - Désactive le bouton de validation
+ * @param {Object} elements - Objet contenant les références aux éléments de l'interface
+ * @param {HTMLInputElement} elements.fileInput - Input de type fichier
+ * @param {HTMLImageElement} elements.imagePreview - Élément img pour la prévisualisation
+ * @param {HTMLElement} elements.imageIcon - Icône d'image
+ * @param {HTMLButtonElement} elements.addPhotoBtn - Bouton d'ajout de photo
+ * @param {HTMLElement} elements.infoText - Texte d'information
+ * @param {HTMLButtonElement} elements.validateButton - Bouton de validation
+ */
+
+function resetUploadInterface(elements) {
+    const {
+        fileInput,
+        imagePreview,
+        imageIcon,
+        addPhotoBtn,
+        infoText,
+        validateButton
+    } = elements;
+
+    fileInput.value = '';
+    imagePreview.src = '';
+    imagePreview.classList.add('hidden');
+    imageIcon.classList.remove('hidden');
+    addPhotoBtn.classList.remove('hidden');
+    infoText.classList.remove('hidden');
+    validateButton.style.backgroundColor = '#A7A7A7';
 }
 
 /**

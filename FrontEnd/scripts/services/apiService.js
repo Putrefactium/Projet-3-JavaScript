@@ -165,7 +165,7 @@ export async function postFormData(formData) {
             throw new Error('Erreur lors de l\'ajout du projet');
         }
         
-        showNotification('Projet ajouté avec succès', 'success');
+        showNotification('Photo ajoutée avec succès', 'success');
         return await response.json();
     } catch (error) {
         console.error('Erreur lors de l\'ajout du projet:', error);
