@@ -6,7 +6,7 @@
  * @module display
  */
 
-import { openModal } from '../../components/modal.js';
+import { openModal } from '../modal/modal.js';
 
 /**
  * Gère l'affichage du mode édition pour les utilisateurs connectés

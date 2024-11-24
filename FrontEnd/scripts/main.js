@@ -1,6 +1,6 @@
 import { generateWorks } from "./features/works/works.js";
 import { loadWorks } from './services/apiService.js';
-import { initializeFilterButtons } from './components/filterButtons.js';
+import { initializeFilterButtons } from './utils/filterButtons.js';
 import { displayEditionMode, updateLoginLogoutButton, displayEditButton } from './features/admin/displayAdmin.js';
 
 const works = await loadWorks(); // Chargement des works
